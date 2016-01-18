@@ -1,2 +1,4 @@
 parseApplicationId = my_app_id
 parseClientKey = my_client_key
+twitterConsumerKey = my_app_id
+twitterConsumerSecret = my_client_key

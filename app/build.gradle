@@ -27,6 +27,8 @@ android {
     applicationVariants.all { variant ->
         variant.buildConfigField 'String', 'PARSE_APPLICATION_ID', "\"" + parseApplicationId + "\""
         variant.buildConfigField 'String', 'PARSE_CLIENT_KEY', "\"" + parseClientKey + "\""
+        variant.buildConfigField 'String', 'TWITTER_CONSUMER_KEY', "\"" + twitterConsumerKey + "\""
+        variant.buildConfigField 'String', 'TWITTER_CONSUMER_SECRET', "\"" + twitterConsumerSecret + "\""
     }
 }
 

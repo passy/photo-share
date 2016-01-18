@@ -3,8 +3,10 @@ package me.passy.photoshare
 import android.app.Activity
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
+import android.util.Log
 import android.widget.Toolbar
-import com.parse.ui.ParseLoginBuilder
+import com.parse.LogInCallback
+import com.parse.ParseTwitterUtils
 
 class MainActivity : Activity() {
 
