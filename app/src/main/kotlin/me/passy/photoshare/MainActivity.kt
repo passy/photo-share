@@ -1,22 +1,39 @@
 package me.passy.photoshare
 
 import android.app.Activity
+import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.FloatingActionButton
-import android.widget.Toolbar
+import com.parse.ParseUser
 import com.parse.ui.ParseLoginBuilder
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.warn
 
-class MainActivity : Activity() {
+
+class MainActivity : Activity(), AnkoLogger {
+
+    val LOGIN_CODE = 0
+
+    private fun redirectOnLogin() {
+        val user = ParseUser.getCurrentUser()
+        if (user != null && user.isAuthenticated) {
+            warn { "Authenticated. "}
+        } else {
+            warn { "Not authenticated. Get off." }
+            startActivityForResult(ParseLoginBuilder(this).build(), LOGIN_CODE)
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-        val toolbar = findViewById(R.id.toolbar) as Toolbar
-        setActionBar(toolbar)
 
-        val fab = findViewById(R.id.fab) as FloatingActionButton
-        fab.setOnClickListener { view ->
-            startActivityForResult(ParseLoginBuilder(this).build(), 0)
+        redirectOnLogin()
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (requestCode == LOGIN_CODE) {
+            redirectOnLogin()
+        } else {
+            super.onActivityResult(requestCode, resultCode, data)
         }
     }
 }
