@@ -3,10 +3,8 @@ package me.passy.photoshare
 import android.app.Activity
 import android.os.Bundle
 import android.support.design.widget.FloatingActionButton
-import android.util.Log
 import android.widget.Toolbar
-import com.parse.LogInCallback
-import com.parse.ParseTwitterUtils
+import com.parse.ui.ParseLoginBuilder
 
 class MainActivity : Activity() {
 
@@ -18,8 +16,7 @@ class MainActivity : Activity() {
 
         val fab = findViewById(R.id.fab) as FloatingActionButton
         fab.setOnClickListener { view ->
-            val builder = ParseLoginBuilder(this);
-            startActivityForResult(builder.build(), 0);
+            startActivityForResult(ParseLoginBuilder(this).build(), 0)
         }
     }
 }
