@@ -1,4 +1,4 @@
-package me.passy.photoshare
+package me.passy.photoshare.ui.activities
 
 import android.app.Activity
 import android.content.Intent
@@ -6,6 +6,7 @@ import android.os.Bundle
 import com.parse.ParseUser
 import com.parse.ui.ParseLoginBuilder
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.warn
 
 
@@ -17,6 +18,8 @@ class MainActivity : Activity(), AnkoLogger {
         val user = ParseUser.getCurrentUser()
         if (user != null && user.isAuthenticated) {
             warn { "Authenticated. "}
+            startActivity<StreamActivity>()
+            finish()
         } else {
             warn { "Not authenticated. Get off." }
             startActivityForResult(ParseLoginBuilder(this).build(), LOGIN_CODE)
