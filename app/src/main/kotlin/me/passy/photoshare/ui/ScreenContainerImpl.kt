@@ -7,8 +7,9 @@ import android.widget.Toolbar
 import butterknife.Bind
 import butterknife.ButterKnife
 import me.passy.photoshare.R
+import javax.inject.Inject
 
-public class ScreenContainerImpl : ScreenContainer {
+public class ScreenContainerImpl @Inject constructor() : ScreenContainer {
     @Bind(R.id.drawer_layout)
     lateinit override var drawerLayout: DrawerLayout
 
