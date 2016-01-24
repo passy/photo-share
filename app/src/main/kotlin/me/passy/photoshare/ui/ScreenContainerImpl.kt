@@ -1,6 +1,8 @@
 package me.passy.photoshare.ui
 
 import android.app.Activity
+import android.support.design.widget.CoordinatorLayout
+import android.support.design.widget.FloatingActionButton
 import android.support.v4.widget.DrawerLayout
 import android.view.ViewGroup
 import android.widget.Toolbar
@@ -13,12 +15,17 @@ public class ScreenContainerImpl @Inject constructor() : ScreenContainer {
     @Bind(R.id.drawer_layout)
     lateinit override var drawerLayout: DrawerLayout
 
+    @Bind(R.id.fab)
+    lateinit override var fab: FloatingActionButton
+
+    @Bind(R.id.coordinator_layout)
+    lateinit override var coordinatorLayout: CoordinatorLayout
+
     @Bind(R.id.toolbar)
     lateinit var toolbar: Toolbar
 
     @Bind(R.id.activity_content)
     lateinit var container: ViewGroup
-
 
     override fun bind(activity: Activity): ViewGroup {
         activity.setContentView(R.layout.base_layout)
