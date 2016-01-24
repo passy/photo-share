@@ -21,7 +21,8 @@ public class ScreenContainerImpl @Inject constructor() : ScreenContainer {
 
 
     override fun bind(activity: Activity): ViewGroup {
-        activity.setContentView(R.layout.activity_main)
+        activity.setContentView(R.layout.base_layout)
+        ButterKnife.setDebug(true)
         ButterKnife.bind(this, activity)
 
         setupDrawerLayout(drawerLayout, activity)
