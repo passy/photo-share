@@ -11,13 +11,13 @@ import javax.inject.Inject
 
 abstract public class BaseActivity : Activity() {
     @field:[Inject ForActivity]
-    lateinit var _screenContainer: ScreenContainer
+    lateinit var screenContainer: ScreenContainer
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         component.inject(this)
 
-        val mainFrame = _screenContainer.bind(this)
+        val mainFrame = screenContainer.bind(this)
         layoutInflater.inflate(layout, mainFrame)
 
         ButterKnife.bind(this)
@@ -26,7 +26,7 @@ abstract public class BaseActivity : Activity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             android.R.id.home -> {
-                _screenContainer.drawerLayout.openDrawer(GravityCompat.START)
+                screenContainer.drawerLayout.openDrawer(GravityCompat.START)
                 return true
             }
         }

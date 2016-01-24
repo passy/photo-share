@@ -7,5 +7,6 @@ import me.passy.photoshare.ui.ForActivity
 @Subcomponent(modules = arrayOf(ActivityModule::class))
 public interface ActivityComponent {
     fun inject(activity: StreamActivity)
+    fun inject(activity: PhotoUploadActivity)
     fun inject(activity: BaseActivity)
 }
