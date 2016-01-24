@@ -6,22 +6,21 @@ import android.os.Bundle
 import com.parse.ParseUser
 import com.parse.ui.ParseLoginBuilder
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.warn
 
 
 class MainActivity : Activity(), AnkoLogger {
-
     val LOGIN_CODE = 0
 
     private fun redirectOnLogin() {
         val user = ParseUser.getCurrentUser()
         if (user != null && user.isAuthenticated) {
-            warn { "Authenticated. "}
+            info { "Authenticated. "}
             startActivity<StreamActivity>()
             finish()
         } else {
-            warn { "Not authenticated. Get off." }
+            info { "Not authenticated. Get off." }
             startActivityForResult(ParseLoginBuilder(this).build(), LOGIN_CODE)
         }
     }

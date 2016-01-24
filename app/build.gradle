@@ -38,6 +38,10 @@ repositories {
     mavenCentral()
 }
 
+kapt {
+    generateStubs = true
+}
+
 dependencies {
     // JARs
     compile fileTree(dir: 'libs', include: ['*.jar'])
@@ -58,6 +62,10 @@ dependencies {
     // explicitly depend on RxJava's latest version for bug fixes and new features.
     compile 'io.reactivex:rxjava:1.0.14'
     compile 'io.reactivex:rxkotlin:0.30.1'
+    // Dagger 2
+    compile 'com.google.dagger:dagger:2.0.2'
+    kapt 'com.google.dagger:dagger-compiler:2.0.2'
+    provided 'org.glassfish:javax.annotation:10.0-b28'
 
     compile('com.infstory:rxparse:1.0.3') {
         exclude module: 'parse'
@@ -68,10 +76,12 @@ dependencies {
     compile 'io.reactivex:rxjava-debug:1.0.2'
     compile 'com.squareup.okhttp:okhttp:2.7.2'
     compile 'com.squareup.okhttp:okhttp-urlconnection:2.7.2'
+
     // Various
     compile 'com.github.bumptech.glide:glide:3.6.1'
     compile 'com.squareup.retrofit:retrofit:2.0.0-beta2'
     compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta2'
+    compile 'com.jakewharton:butterknife:7.0.1'
 
     // Testing
     testCompile 'junit:junit:4.12'
