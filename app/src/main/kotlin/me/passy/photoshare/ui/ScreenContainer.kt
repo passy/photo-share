@@ -6,6 +6,7 @@ import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.widget.DrawerLayout
 import android.view.ViewGroup
+import rx.Observable
 
 /**
  * An indirection which allows controlling the root container used for each activity.
@@ -14,7 +15,7 @@ public interface ScreenContainer {
     /**
      * The root [ViewGroup] into which the activity should place its contents.
      */
-    fun bind(activity: Activity): ViewGroup
+    fun bind(activity: Activity, screenContainerModel: Observable<ScreenContainerModel>): ViewGroup
 
     /**
      * Returns the [DrawerLayout] of this window.

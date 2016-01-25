@@ -7,6 +7,8 @@ import android.view.MenuItem
 import butterknife.ButterKnife
 import me.passy.photoshare.ui.ForActivity
 import me.passy.photoshare.ui.ScreenContainer
+import me.passy.photoshare.ui.ScreenContainerModel
+import rx.Observable
 import javax.inject.Inject
 
 abstract public class BaseActivity : Activity() {
@@ -17,7 +19,7 @@ abstract public class BaseActivity : Activity() {
         super.onCreate(savedInstanceState)
         component.inject(this)
 
-        val mainFrame = screenContainer.bind(this)
+        val mainFrame = screenContainer.bind(this, screenContainerModel)
         layoutInflater.inflate(layout, mainFrame)
 
         ButterKnife.bind(this)
@@ -36,4 +38,6 @@ abstract public class BaseActivity : Activity() {
 
     abstract val component: ActivityComponent
     abstract val layout: Int
+    abstract val screenContainerModel: Observable<ScreenContainerModel>
 }
+

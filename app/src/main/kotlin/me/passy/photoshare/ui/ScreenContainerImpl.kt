@@ -9,6 +9,7 @@ import android.widget.Toolbar
 import butterknife.Bind
 import butterknife.ButterKnife
 import me.passy.photoshare.R
+import rx.Observable
 import javax.inject.Inject
 
 public class ScreenContainerImpl @Inject constructor() : ScreenContainer {
@@ -27,13 +28,21 @@ public class ScreenContainerImpl @Inject constructor() : ScreenContainer {
     @Bind(R.id.activity_content)
     lateinit var container: ViewGroup
 
-    override fun bind(activity: Activity): ViewGroup {
+    override fun bind(activity: Activity, screenContainerModel: Observable<ScreenContainerModel>): ViewGroup {
         activity.setContentView(R.layout.base_layout)
         ButterKnife.setDebug(true)
         ButterKnife.bind(this, activity)
 
         setupDrawerLayout(drawerLayout, activity)
         setupToolbar(toolbar, activity)
+
+        screenContainerModel.subscribe { model ->
+            if (model.fabVisible) {
+                fab.show()
+            } else {
+                fab.hide()
+            }
+        }
 
         return container
     }
