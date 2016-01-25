@@ -17,7 +17,7 @@ public class StreamActivity : BaseActivity(), AnkoLogger {
         super.onCreate(savedInstanceState)
 
         screenContainer.fab.onClick {
-            startActivity<PhotoUploadActivity>()
+            startActivity<CameraActivity>()
         }
 
     }
