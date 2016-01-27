@@ -73,7 +73,7 @@ import java.util.concurrent.TimeUnit;
 
 import me.passy.photoshare.R;
 import rx.Observable;
-import rx.subjects.AsyncSubject;
+import rx.subjects.PublishSubject;
 
 public class Camera2BasicFragment extends Fragment
         implements View.OnClickListener, ActivityCompat.OnRequestPermissionsResultCallback {
@@ -163,32 +163,32 @@ public class Camera2BasicFragment extends Fragment
     /**
      * ID of the current {@link CameraDevice}.
      */
-    private String mCameraId;
+    String mCameraId;
  
     /**
      * An {@link AutoFitTextureView} for camera preview.
      */
-    private AutoFitTextureView mTextureView;
+    AutoFitTextureView mTextureView;
  
     /**
      * A {@link CameraCaptureSession } for camera preview.
      */
-    private CameraCaptureSession mCaptureSession;
+    CameraCaptureSession mCaptureSession;
  
     /**
      * A reference to the opened {@link CameraDevice}.
      */
-    private CameraDevice mCameraDevice;
+    CameraDevice mCameraDevice;
  
     /**
      * The {@link android.util.Size} of camera preview.
      */
-    private Size mPreviewSize;
+    Size mPreviewSize;
 
     /**
      * A {@link Observable<File>} that emits files as they are saved.
      */
-    private final AsyncSubject<File> mPictureFile = AsyncSubject.create();
+    final PublishSubject<File> mPictureFile = PublishSubject.create();
 
     /**
      * {@link CameraDevice.StateCallback} is called when {@link CameraDevice} changes its state.
@@ -422,7 +422,7 @@ public class Camera2BasicFragment extends Fragment
         return new Camera2BasicFragment();
     }
 
-    public Observable<File> pictureObservable() {
+    public Observable<File> getPictureObservable() {
         return mPictureFile;
     }
  
@@ -656,7 +656,7 @@ public class Camera2BasicFragment extends Fragment
     /**
      * Starts a background thread and its {@link Handler}.
      */
-    private void startBackgroundThread() {
+    void startBackgroundThread() {
         mBackgroundThread = new HandlerThread("CameraBackground");
         mBackgroundThread.start();
         mBackgroundHandler = new Handler(mBackgroundThread.getLooper());
@@ -665,7 +665,7 @@ public class Camera2BasicFragment extends Fragment
     /**
      * Stops the background thread and its {@link Handler}.
      */
-    private void stopBackgroundThread() {
+    void stopBackgroundThread() {
         mBackgroundThread.quitSafely();
         try {
             mBackgroundThread.join();
@@ -679,7 +679,7 @@ public class Camera2BasicFragment extends Fragment
     /**
      * Creates a new {@link CameraCaptureSession} for camera preview.
      */
-    private void createCameraPreviewSession() {
+    void createCameraPreviewSession() {
         try {
             SurfaceTexture texture = mTextureView.getSurfaceTexture();
             assert texture != null;
@@ -835,7 +835,7 @@ public class Camera2BasicFragment extends Fragment
             int rotation = activity.getWindowManager().getDefaultDisplay().getRotation();
             captureBuilder.set(CaptureRequest.JPEG_ORIENTATION, ORIENTATIONS.get(rotation));
  
-            CameraCaptureSession.CaptureCallback CaptureCallback
+            CameraCaptureSession.CaptureCallback captureCallback
                     = new CameraCaptureSession.CaptureCallback() {
  
                 @Override
@@ -849,7 +849,7 @@ public class Camera2BasicFragment extends Fragment
             };
  
             mCaptureSession.stopRepeating();
-            mCaptureSession.capture(captureBuilder.build(), CaptureCallback, null);
+            mCaptureSession.capture(captureBuilder.build(), captureCallback, null);
         } catch (CameraAccessException e) {
             e.printStackTrace();
         }
@@ -859,7 +859,7 @@ public class Camera2BasicFragment extends Fragment
      * Unlock the focus. This method should be called when still image capture sequence is
      * finished.
      */
-    private void unlockFocus() {
+    void unlockFocus() {
         try {
             // Reset the auto-focus trigger
             mPreviewRequestBuilder.set(CaptureRequest.CONTROL_AF_TRIGGER,

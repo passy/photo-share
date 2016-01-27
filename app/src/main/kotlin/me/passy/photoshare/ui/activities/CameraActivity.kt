@@ -24,22 +24,30 @@ public class CameraActivity : Activity(), AnkoLogger {
         super.onCreate(savedInstanceState)
         CameraActivityUI().setContentView(this)
 
-        val fragment: Camera2BasicFragment = if (savedInstanceState == null) {
-            val frag = Camera2BasicFragment.newInstance()
-            fragmentManager.beginTransaction()
-                .replace(R.id.camera_holder, frag, FRAG_CAMERA)
-                .commit()
-            frag
-        } else {
-            fragmentManager.getFragment(savedInstanceState, FRAG_CAMERA) as Camera2BasicFragment
-        }
-
-        photoSubscription = fragment.pictureObservable().subscribe { file ->
+        val fragment = insertFragment(savedInstanceState)
+        photoSubscription = fragment.pictureObservable.subscribe({ file ->
             val intent = Intent()
             intent.putExtra(EXTRA_PHOTO_PATH, file.absolutePath)
             setResult(RESULT_OK, intent)
             finish()
+        }, { err ->
+            error("Error while capturing: ", err)
+        })
+    }
+
+    private fun insertFragment(savedInstanceState: Bundle?): Camera2BasicFragment {
+        var fragment = savedInstanceState?.let { bundle ->
+            fragmentManager.getFragment(bundle, FRAG_CAMERA) as Camera2BasicFragment
         }
+
+        if (fragment == null) {
+            fragment = Camera2BasicFragment.newInstance()
+            fragmentManager.beginTransaction()
+                    .replace(R.id.camera_holder, fragment, FRAG_CAMERA)
+                    .commit()
+        }
+
+        return fragment!!
     }
 
     override fun onDestroy() {
