@@ -12,10 +12,12 @@ import org.jetbrains.anko.*
 import rx.Subscription
 
 public class CameraActivity : Activity(), AnkoLogger {
-    val EXTRA_PHOTO_PATH = "PHOTO_PATH"
-
     private val FRAG_CAMERA = "CAMERA_FRAGMENT"
     private lateinit var photoSubscription: Subscription
+
+    companion object {
+        val EXTRA_PHOTO_PATH = "PHOTO_PATH"
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         requestWindowFeature(Window.FEATURE_NO_TITLE)

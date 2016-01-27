@@ -842,9 +842,9 @@ public class Camera2BasicFragment extends Fragment
                 public void onCaptureCompleted(@NonNull CameraCaptureSession session,
                                                @NonNull CaptureRequest request,
                                                @NonNull TotalCaptureResult result) {
-                    mPictureFile.onNext(mFile.getAbsoluteFile());
                     Log.d(TAG, "File saved: " + mFile.toString());
                     unlockFocus();
+                    mPictureFile.onNext(mFile.getAbsoluteFile());
                 }
             };
  
