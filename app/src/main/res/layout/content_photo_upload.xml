@@ -9,8 +9,30 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".ui.activities.StreamActivity">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Upload Photo" />
+    <ImageView
+            android:layout_width="96dip"
+            android:layout_height="96dip"
+            android:id="@+id/thumbnail"
+            android:layout_alignParentTop="true"
+            android:layout_alignParentStart="true"
+            android:background="@color/colorAccent"/>
+
+    <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:inputType="textMultiLine"
+            android:ems="10"
+            android:id="@+id/photo_title"
+            android:layout_alignTop="@+id/thumbnail"
+            android:layout_alignBottom="@+id/thumbnail"
+            android:layout_alignParentEnd="true"
+            android:hint="Write a caption ..."/>
+
+    <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cool."
+            android:id="@+id/button"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="true"/>
 </RelativeLayout>
