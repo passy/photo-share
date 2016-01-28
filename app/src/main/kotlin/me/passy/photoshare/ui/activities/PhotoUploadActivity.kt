@@ -3,22 +3,28 @@ package me.passy.photoshare.ui.activities
 import android.net.Uri
 import android.os.Bundle
 import android.widget.ImageView
+import butterknife.Bind
 import me.passy.photoshare.PhotoShareApplication
 import me.passy.photoshare.R
 import me.passy.photoshare.ui.MenuMode
 import me.passy.photoshare.ui.ScreenContainerModel
+import me.passy.photoshare.ui.models.PhotoUploadModel
 import me.passy.photoshare.ui.params.PhotoUploadParams
+import me.passy.photoshare.ui.presenters.PhotoUploadPresenterImpl
+import me.passy.photoshare.ui.views.PhotoUploadView
 import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.find
 import org.jetbrains.anko.imageURI
 import rx.Observable
 
-public class PhotoUploadActivity : BaseActivity(), AnkoLogger {
+public class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
     companion object {
         val EXTRA = "EXTRA"
     }
 
     private var params: PhotoUploadParams = PhotoUploadParams.EMPTY
+
+    @Bind(R.id.thumbnail)
+    lateinit var thumbnailView: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,8 +35,10 @@ public class PhotoUploadActivity : BaseActivity(), AnkoLogger {
             throw IllegalArgumentException("Failed to specify $EXTRA when starting $localClassName}.")
         }
 
-        // TODO: Presenter, pls.
-        find<ImageView>(R.id.thumbnail).imageURI = Uri.fromFile(params.photoPath)
+        // TODO: No, not like that, silly!
+        val presenter = PhotoUploadPresenterImpl()
+        presenter.bind(
+                this, PhotoUploadModel(photoPath = Observable.just(Uri.fromFile(params.photoPath))))
     }
 
     override val component: ActivityComponent
@@ -42,4 +50,9 @@ public class PhotoUploadActivity : BaseActivity(), AnkoLogger {
         get() = Observable.just(
                 ScreenContainerModel(fabVisible = false, menuMode = MenuMode.UP)
         )
+
+    override fun setThumbnailSource(src: Uri) {
+        thumbnailView.imageURI = src
+    }
+
 }
