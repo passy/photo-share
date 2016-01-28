@@ -14,7 +14,9 @@ import org.jetbrains.anko.imageURI
 import rx.Observable
 
 public class PhotoUploadActivity : BaseActivity(), AnkoLogger {
-    public val EXTRA = "EXTRA"
+    companion object {
+        val EXTRA = "EXTRA"
+    }
 
     private var params: PhotoUploadParams = PhotoUploadParams.EMPTY
 

@@ -13,7 +13,7 @@ import rx.Subscription
 
 public class CameraActivity : Activity(), AnkoLogger {
     private val FRAG_CAMERA = "CAMERA_FRAGMENT"
-    private lateinit var photoSubscription: Subscription
+    private var photoSubscription: Subscription? = null
 
     companion object {
         val EXTRA_PHOTO_PATH = "PHOTO_PATH"
@@ -34,6 +34,8 @@ public class CameraActivity : Activity(), AnkoLogger {
             finish()
         }, { err ->
             error("Error while capturing: ", err)
+            setResult(RESULT_CANCELED)
+            finish()
         })
     }
 
@@ -55,7 +57,7 @@ public class CameraActivity : Activity(), AnkoLogger {
     override fun onDestroy() {
         super.onDestroy()
 
-        photoSubscription.unsubscribe()
+        photoSubscription?.unsubscribe()
     }
 }
 

@@ -6,8 +6,8 @@ import me.passy.photoshare.PhotoShareApplication
 import me.passy.photoshare.R
 import me.passy.photoshare.ui.ScreenContainerModel
 import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.info
 import org.jetbrains.anko.onClick
+import org.jetbrains.anko.startActivity
 import org.jetbrains.anko.startActivityForResult
 import rx.Observable
 
@@ -26,8 +26,10 @@ public class StreamActivity : BaseActivity(), AnkoLogger {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        // TODO: Tell presenter.
         if (requestCode == 0 && resultCode == RESULT_OK) {
-            info("Got photo: " + data?.getStringExtra(CameraActivity.EXTRA_PHOTO_PATH))
+            val photoPath = data!!.getStringExtra(CameraActivity.EXTRA_PHOTO_PATH)
+            startActivity<PhotoUploadActivity>(Pair(PhotoUploadActivity.EXTRA, photoPath))
         }
         super.onActivityResult(requestCode, resultCode, data)
     }
