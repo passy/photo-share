@@ -12,6 +12,7 @@ import butterknife.Bind
 import butterknife.ButterKnife
 import me.passy.photoshare.R
 import rx.Observable
+import rx.Subscription
 import javax.inject.Inject
 
 public class ScreenContainerImpl @Inject constructor() : ScreenContainer {
@@ -30,31 +31,30 @@ public class ScreenContainerImpl @Inject constructor() : ScreenContainer {
     @Bind(R.id.activity_content)
     lateinit var container: ViewGroup
 
+    private var subscription: Subscription? = null
+
     override fun bind(activity: Activity, screenContainerModel: Observable<ScreenContainerModel>): ViewGroup {
         activity.setContentView(R.layout.base_layout)
         ButterKnife.setDebug(true)
         ButterKnife.bind(this, activity)
 
-        setupDrawerLayout(drawerLayout, activity)
-        setupToolbar(toolbar, activity)
-
-        screenContainerModel.subscribe { model ->
+        subscription = screenContainerModel.distinctUntilChanged().subscribe { model ->
             if (model.fabVisible) {
                 fab.show()
             } else {
                 fab.hide()
             }
 
-            when (model.drawerMode) {
-                DrawerMode.DRAWER_HIDDEN ->
-                    drawerLayout.isEnabled = false
+            setupToolbar(toolbar, activity, model.menuMode)
+            setupDrawerLayout(drawerLayout, activity, model.menuMode)
 
-                DrawerMode.DRAWER_VISIBLE ->
-                    drawerLayout.isEnabled = true
-            }
         }
 
         return container
+    }
+
+    override fun unbind() {
+        subscription?.unsubscribe()
     }
 
     override fun onHomeSelected(activity: Activity) {
@@ -65,15 +65,31 @@ public class ScreenContainerImpl @Inject constructor() : ScreenContainer {
         }
     }
 
-    private fun setupToolbar(toolbar: Toolbar, activity: Activity) {
+    private fun setupToolbar(toolbar: Toolbar, activity: Activity, menuMode: MenuMode) {
         activity.setActionBar(toolbar)
 
+        val upDrawable = when (menuMode) {
+            MenuMode.UP -> 0
+            MenuMode.HAMBURGER -> R.drawable.ic_menu_white_24dp
+        }
+
         with(activity.actionBar) {
-            setHomeAsUpIndicator(R.drawable.ic_menu_black_24dp)
+            setHomeAsUpIndicator(upDrawable)
             setDisplayHomeAsUpEnabled(true)
         }
     }
 
-    private fun setupDrawerLayout(drawerLayout: DrawerLayout, activity: Activity) {
+    private fun setupDrawerLayout(drawerLayout: DrawerLayout, activity: Activity, menuMode: MenuMode) {
+        when (menuMode) {
+            MenuMode.HAMBURGER -> {
+                drawerLayout.isEnabled = true
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_UNLOCKED)
+            }
+
+            MenuMode.UP -> {
+                drawerLayout.isEnabled = false
+                drawerLayout.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED)
+            }
+        }
     }
 }

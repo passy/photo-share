@@ -44,6 +44,7 @@
         <activity
             android:name=".ui.activities.PhotoUploadActivity"
             android:label="@string/upload_activity_name"
+            android:parentActivityName=".ui.activities.StreamActivity"
             android:launchMode="singleTop">
         </activity>
     </application>

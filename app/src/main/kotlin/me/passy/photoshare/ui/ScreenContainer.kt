@@ -18,6 +18,11 @@ public interface ScreenContainer {
     fun bind(activity: Activity, screenContainerModel: Observable<ScreenContainerModel>): ViewGroup
 
     /**
+     * Call when the activity no longer holds this. Please.
+     */
+    fun unbind()
+
+    /**
      * Run when "home" in the action bar is selected.
      */
     fun onHomeSelected(activity: Activity)

@@ -24,6 +24,12 @@ abstract public class BaseActivity : Activity() {
         ButterKnife.bind(this)
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        screenContainer.unbind()
+    }
+
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             android.R.id.home -> {
