@@ -2,8 +2,10 @@ package me.passy.photoshare.ui.activities
 
 import android.net.Uri
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ImageView
 import butterknife.Bind
+import com.jakewharton.rxbinding.view.clicks
 import me.passy.photoshare.PhotoShareApplication
 import me.passy.photoshare.R
 import me.passy.photoshare.ui.MenuMode
@@ -26,6 +28,9 @@ public class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
     @Bind(R.id.thumbnail)
     lateinit var thumbnailView: ImageView
 
+    @Bind(R.id.tmp_pls_change_me_save_btn)
+    lateinit var saveBtn: Button
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -40,6 +45,9 @@ public class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
         presenter.bind(
                 this, PhotoUploadModel(photoPath = Observable.just(Uri.fromFile(params.photoPath))))
     }
+
+    override val saveBtnObservable: Observable<Unit>
+        get() = saveBtn.clicks()
 
     override val component: ActivityComponent
         get() = PhotoShareApplication.graph.plus(ActivityModule())
