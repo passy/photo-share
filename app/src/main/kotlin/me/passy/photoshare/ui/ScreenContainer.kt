@@ -18,6 +18,11 @@ public interface ScreenContainer {
     fun bind(activity: Activity, screenContainerModel: Observable<ScreenContainerModel>): ViewGroup
 
     /**
+     * Run when "home" in the action bar is selected.
+     */
+    fun onHomeSelected(activity: Activity)
+
+    /**
      * Returns the [DrawerLayout] of this window.
      */
     val drawerLayout: DrawerLayout

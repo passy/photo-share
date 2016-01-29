@@ -2,7 +2,6 @@ package me.passy.photoshare.ui.activities
 
 import android.app.Activity
 import android.os.Bundle
-import android.support.v4.view.GravityCompat
 import android.view.MenuItem
 import butterknife.ButterKnife
 import me.passy.photoshare.ui.ForActivity
@@ -28,7 +27,7 @@ abstract public class BaseActivity : Activity() {
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             android.R.id.home -> {
-                screenContainer.drawerLayout.openDrawer(GravityCompat.START)
+                screenContainer.onHomeSelected(this)
                 return true
             }
         }

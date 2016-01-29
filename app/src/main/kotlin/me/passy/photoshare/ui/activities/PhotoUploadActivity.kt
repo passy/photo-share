@@ -48,7 +48,7 @@ public class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
 
     override val screenContainerModel: Observable<ScreenContainerModel>
         get() = Observable.just(
-                ScreenContainerModel(fabVisible = false, menuMode = MenuMode.UP)
+                ScreenContainerModel.DEFAULT.copy(fabVisible = false, menuMode = MenuMode.UP)
         )
 
     override fun setThumbnailSource(src: Uri) {
