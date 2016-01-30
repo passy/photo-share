@@ -26,5 +26,5 @@
             android:layout_alignTop="@+id/thumbnail"
             android:layout_alignBottom="@+id/thumbnail"
             android:layout_alignParentEnd="true"
-            android:hint="Write a caption ..."/>
+            android:hint="@string/photo_title_hint"/>
 </RelativeLayout>

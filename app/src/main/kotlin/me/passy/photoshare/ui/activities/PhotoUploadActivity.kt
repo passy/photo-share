@@ -17,6 +17,7 @@ import me.passy.photoshare.ui.views.PhotoUploadView
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.imageURI
 import rx.Observable
+import rx.subjects.PublishSubject
 
 public class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
     companion object {
@@ -25,7 +26,7 @@ public class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
 
     private var params: PhotoUploadParams = PhotoUploadParams.EMPTY
 
-    private var sendActionClicks: Observable<Unit> = Observable.never()
+    private var sendActionClicks: PublishSubject<Unit> = PublishSubject.create()
 
     @Bind(R.id.thumbnail)
     lateinit var thumbnailView: ImageView
@@ -50,7 +51,7 @@ public class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         menuInflater.inflate(R.menu.action_send, menu)
         // We want a loud crash here if this fails.
-        sendActionClicks = menu!!.findItem(R.id.action_send).clicks()
+        menu!!.findItem(R.id.action_send).clicks().subscribe(sendActionClicks)
 
         return super.onCreateOptionsMenu(menu)
     }

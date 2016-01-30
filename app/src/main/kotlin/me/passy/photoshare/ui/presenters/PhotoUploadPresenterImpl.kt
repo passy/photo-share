@@ -8,6 +8,8 @@ import me.passy.photoshare.ui.views.PhotoUploadView
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import rx.Observable
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
 import java.io.File
 
 class PhotoUploadPresenterImpl : PhotoUploadPresenter, AnkoLogger {
@@ -18,10 +20,33 @@ class PhotoUploadPresenterImpl : PhotoUploadPresenter, AnkoLogger {
 
         Observable.combineLatest(model.photoPath, view.saveBtnObservable, { t1, t2 -> t1 })
                 .compose(lifecycle.bindToLifecycle<Uri>())
-                .subscribe { path: Uri ->
-                    info("Would save now: " + path)
-                    val photo = ParseFile(File(path.lastPathSegment))
-                    photo.saveInBackground()
+                .subscribeOn(Schedulers.io())
+                .flatMap { uri: Uri ->
+                    info("Would save now: " + uri)
+                    val photo = ParseFile(File(uri.path).readBytes(), "image/jpeg")
+                    Observable.create<PhotoUploadProgress> { sub ->
+                        photo.saveInBackground({ exc ->
+                            if (exc == null) {
+                                sub.onNext(PhotoUploadProgress.Success(photo.url))
+                                sub.onCompleted()
+                            } else {
+                                sub.onError(exc)
+                            }
+                        }, { progress ->
+                            sub.onNext(PhotoUploadProgress.Progress(progress))
+                        })
+                    }
                 }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ p -> handleUpload(p) }, { exc -> error("Exception! " + exc) })
     }
+
+    fun handleUpload(progress: PhotoUploadProgress) {
+        info { "Progress" + progress }
+    }
+}
+
+sealed class PhotoUploadProgress {
+    class Progress(percent: Int) : PhotoUploadProgress()
+    class Success(url: String) : PhotoUploadProgress()
 }
