@@ -6,6 +6,7 @@ import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.FloatingActionButton
 import android.support.v4.widget.DrawerLayout
 import android.view.ViewGroup
+import com.trello.rxlifecycle.components.RxActivity
 import rx.Observable
 
 /**
@@ -15,12 +16,7 @@ public interface ScreenContainer {
     /**
      * The root [ViewGroup] into which the activity should place its contents.
      */
-    fun bind(activity: Activity, screenContainerModel: Observable<ScreenContainerModel>): ViewGroup
-
-    /**
-     * Call when the activity no longer holds this. Please.
-     */
-    fun unbind()
+    fun bind(activity: RxActivity, screenContainerModel: Observable<ScreenContainerModel>): ViewGroup
 
     /**
      * Run when "home" in the action bar is selected.

@@ -2,7 +2,7 @@ package me.passy.photoshare.ui.activities
 
 import android.net.Uri
 import android.os.Bundle
-import android.widget.Button
+import android.view.Menu
 import android.widget.ImageView
 import butterknife.Bind
 import com.jakewharton.rxbinding.view.clicks
@@ -25,11 +25,12 @@ public class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
 
     private var params: PhotoUploadParams = PhotoUploadParams.EMPTY
 
+    private var sendActionClicks: Observable<Unit> = Observable.never()
+
     @Bind(R.id.thumbnail)
     lateinit var thumbnailView: ImageView
 
-    @Bind(R.id.tmp_pls_change_me_save_btn)
-    lateinit var saveBtn: Button
+    lateinit var presenter: PhotoUploadPresenterImpl
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,13 +42,21 @@ public class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
         }
 
         // TODO: No, not like that, silly!
-        val presenter = PhotoUploadPresenterImpl()
-        presenter.bind(
-                this, PhotoUploadModel(photoPath = Observable.just(Uri.fromFile(params.photoPath))))
+        presenter = PhotoUploadPresenterImpl()
+        presenter.bind(this, this,
+                PhotoUploadModel(photoPath = Observable.just(Uri.fromFile(params.photoPath))))
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.action_send, menu)
+        // We want a loud crash here if this fails.
+        sendActionClicks = menu!!.findItem(R.id.action_send).clicks()
+
+        return super.onCreateOptionsMenu(menu)
     }
 
     override val saveBtnObservable: Observable<Unit>
-        get() = saveBtn.clicks()
+        get() = sendActionClicks
 
     override val component: ActivityComponent
         get() = PhotoShareApplication.graph.plus(ActivityModule())

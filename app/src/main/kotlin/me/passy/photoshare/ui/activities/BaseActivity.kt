@@ -1,16 +1,16 @@
 package me.passy.photoshare.ui.activities
 
-import android.app.Activity
 import android.os.Bundle
 import android.view.MenuItem
 import butterknife.ButterKnife
+import com.trello.rxlifecycle.components.RxActivity
 import me.passy.photoshare.ui.ForActivity
 import me.passy.photoshare.ui.ScreenContainer
 import me.passy.photoshare.ui.ScreenContainerModel
 import rx.Observable
 import javax.inject.Inject
 
-abstract public class BaseActivity : Activity() {
+abstract public class BaseActivity : RxActivity() {
     @field:[Inject ForActivity]
     lateinit var screenContainer: ScreenContainer
 
@@ -22,12 +22,6 @@ abstract public class BaseActivity : Activity() {
         layoutInflater.inflate(layout, mainFrame)
 
         ButterKnife.bind(this)
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        screenContainer.unbind()
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {

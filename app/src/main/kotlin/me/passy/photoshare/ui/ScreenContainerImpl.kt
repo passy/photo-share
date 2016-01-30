@@ -10,9 +10,9 @@ import android.view.ViewGroup
 import android.widget.Toolbar
 import butterknife.Bind
 import butterknife.ButterKnife
+import com.trello.rxlifecycle.components.RxActivity
 import me.passy.photoshare.R
 import rx.Observable
-import rx.Subscription
 import javax.inject.Inject
 
 public class ScreenContainerImpl @Inject constructor() : ScreenContainer {
@@ -31,30 +31,26 @@ public class ScreenContainerImpl @Inject constructor() : ScreenContainer {
     @Bind(R.id.activity_content)
     lateinit var container: ViewGroup
 
-    private var subscription: Subscription? = null
-
-    override fun bind(activity: Activity, screenContainerModel: Observable<ScreenContainerModel>): ViewGroup {
+    override fun bind(activity: RxActivity, screenContainerModel: Observable<ScreenContainerModel>): ViewGroup {
         activity.setContentView(R.layout.base_layout)
         ButterKnife.setDebug(true)
         ButterKnife.bind(this, activity)
 
-        subscription = screenContainerModel.distinctUntilChanged().subscribe { model ->
-            if (model.fabVisible) {
-                fab.show()
-            } else {
-                fab.hide()
-            }
+        screenContainerModel
+                .distinctUntilChanged()
+                .compose(activity.bindToLifecycle<ScreenContainerModel>())
+                .subscribe { model ->
+                    if (model.fabVisible) {
+                        fab.show()
+                    } else {
+                        fab.hide()
+                    }
 
-            setupToolbar(toolbar, activity, model.menuMode)
-            setupDrawerLayout(drawerLayout, activity, model.menuMode)
-
-        }
+                    setupToolbar(toolbar, activity, model.menuMode)
+                    setupDrawerLayout(drawerLayout, activity, model.menuMode)
+                }
 
         return container
-    }
-
-    override fun unbind() {
-        subscription?.unsubscribe()
     }
 
     override fun onHomeSelected(activity: Activity) {

@@ -27,12 +27,4 @@
             android:layout_alignBottom="@+id/thumbnail"
             android:layout_alignParentEnd="true"
             android:hint="Write a caption ..."/>
-
-    <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cool."
-            android:id="@+id/tmp_pls_change_me_save_btn"
-            android:layout_centerVertical="true"
-            android:layout_alignParentEnd="true"/>
 </RelativeLayout>
