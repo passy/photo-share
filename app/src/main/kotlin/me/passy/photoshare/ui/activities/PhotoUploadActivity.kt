@@ -12,14 +12,17 @@ import me.passy.photoshare.ui.MenuMode
 import me.passy.photoshare.ui.ScreenContainerModel
 import me.passy.photoshare.ui.models.PhotoUploadModel
 import me.passy.photoshare.ui.params.PhotoUploadParams
+import me.passy.photoshare.ui.presenters.PhotoUploadPresenter
 import me.passy.photoshare.ui.presenters.PhotoUploadPresenterImpl
+import me.passy.photoshare.ui.presenters.PresenterHolder
 import me.passy.photoshare.ui.views.PhotoUploadView
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.imageURI
 import rx.Observable
 import rx.subjects.PublishSubject
+import java.io.File
 
-public class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
+class PhotoUploadActivity : BaseActivity(), PresenterHolder<PhotoUploadPresenter>, PhotoUploadView, AnkoLogger {
     companion object {
         val EXTRA = "EXTRA"
     }
@@ -39,7 +42,8 @@ public class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
         params = intent.getParcelableExtra<PhotoUploadParams>(EXTRA) ?: PhotoUploadParams.EMPTY
 
         if (params == PhotoUploadParams.EMPTY) {
-            throw IllegalArgumentException("Failed to specify $EXTRA when starting $localClassName}.")
+            params = PhotoUploadParams(File(getExternalFilesDir(null), "pic.jpg"))
+            // throw IllegalArgumentException("Failed to specify $EXTRA when starting $localClassName}.")
         }
 
         // TODO: No, not like that, silly!
