@@ -1,29 +1,27 @@
 package me.passy.photoshare.ui.presenters
 
-object PresenterRegistry {
-    private val presenterMap: MutableMap<Class<Any>, Presenter<Any, Any>> = mutableMapOf()
+import com.trello.rxlifecycle.ActivityEvent
+import com.trello.rxlifecycle.components.ActivityLifecycleProvider
+import java.util.concurrent.ConcurrentHashMap
+import javax.inject.Inject
+import javax.inject.Provider
+import javax.inject.Singleton
 
-    fun <T> putPresenter(c: PresenterHolder<T>, p: T)
-        where T : Presenter<Any, Any> {
-        presenterMap.put(c.javaClass, p)
+class PresenterHolder @Inject @Singleton constructor() {
+    private val registry: ConcurrentHashMap<String, Presenter<*, *>> = ConcurrentHashMap()
+
+    @Suppress("UNCHECKED_CAST")
+    fun <T : Presenter<*, *>> obtain(activity: ActivityLifecycleProvider,
+                      provider: Provider<T>) : T {
+        val slug = activity.javaClass.name
+        val presenter = registry.getOrPut(slug, { provider.get() })
+
+        activity
+                .lifecycle()
+                .filter { e -> e == ActivityEvent.DESTROY }
+                .compose(activity.bindToLifecycle<ActivityEvent>())
+                .subscribe { registry.remove(slug) }
+
+        return presenter as T
     }
-
-    @Suppress("UNCHECKED_CAST", "CAST_NEVER_SUCCEEDS")
-    fun <T> getPresenter(c: PresenterHolder<T>): T
-        where T : Presenter<Any, Any> {
-        synchronized(this) {
-            return presenterMap[c.javaClass as Class<Any>] as T
-        }
-    }
-
-    @Suppress("CAST_NEVER_SUCCEEDS")
-    fun remove(c: PresenterHolder<*>) {
-        synchronized(this) {
-            presenterMap.remove(c.javaClass as Class<Any>)
-        }
-    }
-}
-
-// Phantom type to make registration type-safe-ish.
-interface PresenterHolder<T : Presenter<*, *>> {
 }

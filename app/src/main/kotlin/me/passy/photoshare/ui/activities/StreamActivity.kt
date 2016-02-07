@@ -13,7 +13,7 @@ import org.jetbrains.anko.startActivityForResult
 import rx.Observable
 import java.io.File
 
-public class StreamActivity : BaseActivity(), AnkoLogger {
+class StreamActivity : BaseActivity(), AnkoLogger {
     override val screenContainerModel: Observable<ScreenContainerModel>
         get() = Observable.just(ScreenContainerModel.DEFAULT.copy(fabVisible = true))
 

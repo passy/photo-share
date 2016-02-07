@@ -27,8 +27,9 @@ android {
             keyPassword "android"
         }
     }
-   sourceSets {
+    sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
+        test.java.srcDirs += 'src/test/kotlin'
     }
     // Allows us to use a gradles.properties to specify these instead of having
     // to hardcode them in Java and check them in into VCS.

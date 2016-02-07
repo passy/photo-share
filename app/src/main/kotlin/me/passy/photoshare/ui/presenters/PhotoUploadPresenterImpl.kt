@@ -12,8 +12,12 @@ import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import java.io.File
+import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class PhotoUploadPresenterImpl : PhotoUploadPresenter, AnkoLogger {
+    @Inject
     constructor() {
         warn { "Starting a new $javaClass" }
     }

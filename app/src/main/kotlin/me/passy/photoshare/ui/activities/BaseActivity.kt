@@ -10,7 +10,7 @@ import me.passy.photoshare.ui.ScreenContainerModel
 import rx.Observable
 import javax.inject.Inject
 
-abstract public class BaseActivity : RxActivity() {
+abstract class BaseActivity : RxActivity() {
     @field:[Inject ForActivity]
     lateinit var screenContainer: ScreenContainer
 

@@ -13,7 +13,6 @@ import me.passy.photoshare.ui.ScreenContainerModel
 import me.passy.photoshare.ui.models.PhotoUploadModel
 import me.passy.photoshare.ui.params.PhotoUploadParams
 import me.passy.photoshare.ui.presenters.PhotoUploadPresenter
-import me.passy.photoshare.ui.presenters.PhotoUploadPresenterImpl
 import me.passy.photoshare.ui.presenters.PresenterHolder
 import me.passy.photoshare.ui.views.PhotoUploadView
 import org.jetbrains.anko.AnkoLogger
@@ -21,8 +20,11 @@ import org.jetbrains.anko.imageURI
 import rx.Observable
 import rx.subjects.PublishSubject
 import java.io.File
+import javax.inject.Inject
+import javax.inject.Provider
+import javax.inject.Singleton
 
-class PhotoUploadActivity : BaseActivity(), PresenterHolder<PhotoUploadPresenter>, PhotoUploadView, AnkoLogger {
+class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
     companion object {
         val EXTRA = "EXTRA"
     }
@@ -34,7 +36,11 @@ class PhotoUploadActivity : BaseActivity(), PresenterHolder<PhotoUploadPresenter
     @Bind(R.id.thumbnail)
     lateinit var thumbnailView: ImageView
 
-    lateinit var presenter: PhotoUploadPresenterImpl
+    @field:[Inject Singleton]
+    lateinit var presenterHolder: PresenterHolder
+
+    @Inject
+    lateinit var presenterProvider: Provider<PhotoUploadPresenter>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,10 +52,10 @@ class PhotoUploadActivity : BaseActivity(), PresenterHolder<PhotoUploadPresenter
             // throw IllegalArgumentException("Failed to specify $EXTRA when starting $localClassName}.")
         }
 
-        // TODO: No, not like that, silly!
-        presenter = PhotoUploadPresenterImpl()
-        presenter.bind(this, this,
-                PhotoUploadModel(photoPath = Observable.just(Uri.fromFile(params.photoPath))))
+        val model = PhotoUploadModel(photoPath = Observable.just(Uri.fromFile(params.photoPath)))
+
+        var presenter = presenterHolder.obtain(this, presenterProvider)
+        presenter.bind(this, this, model)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
