@@ -7,7 +7,7 @@ import me.passy.photoshare.ui.ScreenContainer
 import me.passy.photoshare.ui.ScreenContainerImpl
 
 @Module
-public class ActivityModule {
+class ActivityModule {
     @Provides
     @ForActivity
     fun provideScreenContainer(container: ScreenContainerImpl): ScreenContainer = container

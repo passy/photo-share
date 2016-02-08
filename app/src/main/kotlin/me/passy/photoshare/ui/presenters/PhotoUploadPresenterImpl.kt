@@ -7,12 +7,21 @@ import me.passy.photoshare.ui.models.PhotoUploadModel
 import me.passy.photoshare.ui.views.PhotoUploadView
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
+import org.jetbrains.anko.warn
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import java.io.File
+import javax.inject.Inject
+import javax.inject.Singleton
 
+@Singleton
 class PhotoUploadPresenterImpl : PhotoUploadPresenter, AnkoLogger {
+    @Inject
+    constructor() {
+        warn { "Starting a new $javaClass" }
+    }
+
     override fun bind(lifecycle: ActivityLifecycleProvider, view: PhotoUploadView, model: PhotoUploadModel) {
         model.photoPath.subscribe { uri ->
             view.setThumbnailSource(uri)
