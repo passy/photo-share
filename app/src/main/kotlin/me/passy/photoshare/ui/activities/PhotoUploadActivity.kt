@@ -19,7 +19,6 @@ import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.imageURI
 import rx.Observable
 import rx.subjects.PublishSubject
-import java.io.File
 import javax.inject.Inject
 import javax.inject.Provider
 import javax.inject.Singleton
@@ -44,12 +43,12 @@ class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        component.inject(this)
 
         params = intent.getParcelableExtra<PhotoUploadParams>(EXTRA) ?: PhotoUploadParams.EMPTY
 
         if (params == PhotoUploadParams.EMPTY) {
-            params = PhotoUploadParams(File(getExternalFilesDir(null), "pic.jpg"))
-            // throw IllegalArgumentException("Failed to specify $EXTRA when starting $localClassName}.")
+            throw IllegalArgumentException("Failed to specify $EXTRA when starting $localClassName}.")
         }
 
         val model = PhotoUploadModel(photoPath = Observable.just(Uri.fromFile(params.photoPath)))
