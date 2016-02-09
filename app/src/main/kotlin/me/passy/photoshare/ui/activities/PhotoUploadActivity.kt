@@ -3,9 +3,11 @@ package me.passy.photoshare.ui.activities
 import android.net.Uri
 import android.os.Bundle
 import android.view.Menu
+import android.widget.EditText
 import android.widget.ImageView
 import butterknife.Bind
 import com.jakewharton.rxbinding.view.clicks
+import com.jakewharton.rxbinding.widget.textChanges
 import me.passy.photoshare.PhotoShareApplication
 import me.passy.photoshare.R
 import me.passy.photoshare.ui.MenuMode
@@ -16,6 +18,7 @@ import me.passy.photoshare.ui.presenters.PhotoUploadPresenter
 import me.passy.photoshare.ui.presenters.PresenterHolder
 import me.passy.photoshare.ui.views.PhotoUploadView
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.find
 import org.jetbrains.anko.imageURI
 import rx.Observable
 import rx.subjects.PublishSubject
@@ -43,7 +46,7 @@ class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        component.inject(this)
+        component.inject(this) // TODO: Figure out if this is okay.
 
         params = intent.getParcelableExtra<PhotoUploadParams>(EXTRA) ?: PhotoUploadParams.EMPTY
 
@@ -51,7 +54,10 @@ class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
             throw IllegalArgumentException("Failed to specify $EXTRA when starting $localClassName}.")
         }
 
-        val model = PhotoUploadModel(photoPath = Observable.just(Uri.fromFile(params.photoPath)))
+        val model = PhotoUploadModel(
+                photoPath = Observable.just(Uri.fromFile(params.photoPath)),
+                title = find<EditText>(R.id.photo_title).textChanges()
+        )
 
         var presenter = presenterHolder.obtain(this, presenterProvider)
         presenter.bind(this, this, model)

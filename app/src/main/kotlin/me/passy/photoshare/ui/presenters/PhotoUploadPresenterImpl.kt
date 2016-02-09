@@ -3,11 +3,11 @@ package me.passy.photoshare.ui.presenters
 import android.net.Uri
 import com.parse.ParseFile
 import com.trello.rxlifecycle.components.ActivityLifecycleProvider
+import me.passy.photoshare.data.repositories.PhotoRepository
 import me.passy.photoshare.ui.models.PhotoUploadModel
 import me.passy.photoshare.ui.views.PhotoUploadView
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
-import org.jetbrains.anko.warn
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -16,11 +16,8 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class PhotoUploadPresenterImpl : PhotoUploadPresenter, AnkoLogger {
-    @Inject
-    constructor() {
-        warn { "Starting a new $javaClass" }
-    }
+class PhotoUploadPresenterImpl @Inject constructor(val repo: PhotoRepository):
+        PhotoUploadPresenter, AnkoLogger {
 
     override fun bind(lifecycle: ActivityLifecycleProvider, view: PhotoUploadView, model: PhotoUploadModel) {
         model.photoPath.subscribe { uri ->
@@ -31,20 +28,11 @@ class PhotoUploadPresenterImpl : PhotoUploadPresenter, AnkoLogger {
                 .compose(lifecycle.bindToLifecycle<Uri>())
                 .subscribeOn(Schedulers.io())
                 .flatMap { uri: Uri ->
-                    info("Would save now: " + uri)
-                    val photo = ParseFile(File(uri.path).readBytes(), "image/jpeg")
-                    Observable.create<PhotoUploadProgress> { sub ->
-                        photo.saveInBackground({ exc ->
-                            if (exc == null) {
-                                sub.onNext(PhotoUploadProgress.Success(photo.url))
-                                sub.onCompleted()
-                            } else {
-                                sub.onError(exc)
-                            }
-                        }, { progress ->
-                            sub.onNext(PhotoUploadProgress.Progress(progress))
-                        })
-                    }
+                    repo.uploadPhoto(File(uri.path))
+                }
+                .flatMap { photo ->
+                    // TODO: Erm, yeah, extract and stuff.
+                    repo.savePhoto(photo)
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({ p -> handleUpload(p) }, { exc -> error("Exception! " + exc) })
