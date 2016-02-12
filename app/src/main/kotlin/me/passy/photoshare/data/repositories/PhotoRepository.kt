@@ -11,6 +11,6 @@ interface PhotoRepository {
 }
 
 sealed class PhotoUploadProgress {
-    class Progress(percent: Int) : PhotoUploadProgress()
-    class Success(url: ParseFile) : PhotoUploadProgress()
+    class Progress(val percent: Int) : PhotoUploadProgress()
+    class Success(val file: ParseFile) : PhotoUploadProgress()
 }

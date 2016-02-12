@@ -3,7 +3,9 @@ package me.passy.photoshare.ui.presenters
 import android.net.Uri
 import com.parse.ParseFile
 import com.trello.rxlifecycle.components.ActivityLifecycleProvider
+import me.passy.photoshare.data.parse.Photo
 import me.passy.photoshare.data.repositories.PhotoRepository
+import me.passy.photoshare.data.repositories.PhotoUploadProgress
 import me.passy.photoshare.ui.models.PhotoUploadModel
 import me.passy.photoshare.ui.views.PhotoUploadView
 import org.jetbrains.anko.AnkoLogger
@@ -30,20 +32,22 @@ class PhotoUploadPresenterImpl @Inject constructor(val repo: PhotoRepository):
                 .flatMap { uri: Uri ->
                     repo.uploadPhoto(File(uri.path))
                 }
-                .flatMap { photo ->
-                    // TODO: Erm, yeah, extract and stuff.
+                .flatMap {
+                    when (it) {
+                        is PhotoUploadProgress.Progress -> { info("Upload progress: %s".format(it.percent)); Observable.never<ParseFile>() }
+                        is PhotoUploadProgress.Success -> Observable.just(it.file)
+                    }
+                }
+                .flatMap {
+                    val photo = Photo()
+                    photo.image = it
                     repo.savePhoto(photo)
                 }
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({ p -> handleUpload(p) }, { exc -> error("Exception! " + exc) })
+                .subscribe({ file ->
+                    info("All cool. Saved and stuff.")
+                }, {
+                    exc -> error("Exception! " + exc)
+                })
     }
-
-    fun handleUpload(progress: PhotoUploadProgress) {
-        info { "Progress" + progress }
-    }
-}
-
-sealed class PhotoUploadProgress {
-    class Progress(percent: Int) : PhotoUploadProgress()
-    class Success(url: String) : PhotoUploadProgress()
 }

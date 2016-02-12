@@ -16,6 +16,10 @@ class Photo : ParseObject() {
         get() = getParseFile("image")
         set(file) = put("image", file)
 
+    var title: String
+        get() = getString("title")
+        set(str) = put("title", str)
+
     var user: ParseUser
         get() = getParseUser("user")
         set(user) = put("user", user)
