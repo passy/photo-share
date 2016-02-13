@@ -39,6 +39,9 @@ android {
         variant.buildConfigField 'String', 'TWITTER_CONSUMER_KEY', "\"" + twitterConsumerKey + "\""
         variant.buildConfigField 'String', 'TWITTER_CONSUMER_SECRET', "\"" + twitterConsumerSecret + "\""
     }
+    lintOptions {
+        abortOnError false
+    }
 }
 
 repositories {
