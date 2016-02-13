@@ -3,12 +3,14 @@ package me.passy.photoshare
 import android.support.multidex.MultiDexApplication
 import com.parse.Parse
 import com.parse.ParseACL
+import com.parse.ParseObject
 import com.parse.ParseTwitterUtils
+import me.passy.photoshare.data.parse.Photo
 
-public class PhotoShareApplication : MultiDexApplication() {
+class PhotoShareApplication : MultiDexApplication() {
     companion object {
         // allow access to it from java code
-        @JvmStatic lateinit public var graph: ApplicationComponent
+        @JvmStatic lateinit var graph: ApplicationComponent
     }
 
     override fun onCreate() {
@@ -17,6 +19,7 @@ public class PhotoShareApplication : MultiDexApplication() {
         Parse.enableLocalDatastore(this)
         Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG)
         Parse.initialize(this, BuildConfig.PARSE_APPLICATION_ID, BuildConfig.PARSE_CLIENT_KEY)
+        initParseModels()
 
         /*
          * For more information on app security and Parse ACL:
@@ -35,6 +38,9 @@ public class PhotoShareApplication : MultiDexApplication() {
 
         graph = DaggerApplicationComponent.builder().androidModule(AndroidModule(this)).build()
         graph.inject(this)
+    }
 
+    private fun initParseModels() {
+        ParseObject.registerSubclass(Photo::class.java)
     }
 }
