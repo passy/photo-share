@@ -51,7 +51,7 @@ class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
         params = intent.getParcelableExtra<PhotoUploadParams>(EXTRA) ?: PhotoUploadParams.EMPTY
 
         if (params == PhotoUploadParams.EMPTY) {
-            throw IllegalArgumentException("Failed to specify $EXTRA when starting $localClassName}.")
+             throw IllegalArgumentException("Failed to specify $EXTRA when starting $localClassName}.")
         }
 
         val model = PhotoUploadModel(

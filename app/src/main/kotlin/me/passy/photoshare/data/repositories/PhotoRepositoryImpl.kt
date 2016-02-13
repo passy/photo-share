@@ -4,8 +4,9 @@ import com.parse.ParseFile
 import me.passy.photoshare.data.parse.Photo
 import rx.Observable
 import java.io.File
+import javax.inject.Inject
 
-class PhotoRepositoryImpl : PhotoRepository {
+class PhotoRepositoryImpl @Inject constructor(): PhotoRepository {
     override fun uploadPhoto(file: File) : Observable<PhotoUploadProgress> =
         Observable.create<PhotoUploadProgress> { sub ->
             val photo = ParseFile(file.readBytes(), "image/jpeg")
