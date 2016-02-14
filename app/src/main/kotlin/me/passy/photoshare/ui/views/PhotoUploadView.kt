@@ -5,5 +5,7 @@ import rx.Observable
 
 interface PhotoUploadView {
     fun setThumbnailSource(src: Uri)
+    fun setFormEnabled(enabled: Boolean)
     val saveBtnObservable: Observable<Unit>
+    val photoTitleObservable: Observable<CharSequence>
 }

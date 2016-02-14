@@ -1,7 +1,7 @@
 package me.passy.photoshare.ui.presenters
 
-import com.trello.rxlifecycle.components.ActivityLifecycleProvider
+import rx.Observable
 
 interface Presenter<T, U> {
-    fun bind(lifecycle: ActivityLifecycleProvider, view: T, model: U)
+    fun bind(view: T, model: Observable<U>)
 }

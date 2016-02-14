@@ -13,12 +13,14 @@ import me.passy.photoshare.R
 import me.passy.photoshare.ui.MenuMode
 import me.passy.photoshare.ui.ScreenContainerModel
 import me.passy.photoshare.ui.models.PhotoUploadModel
+import me.passy.photoshare.ui.models.PhotoUploadModelStore
+import me.passy.photoshare.ui.models.Store
+import me.passy.photoshare.ui.models.UploadStatus
 import me.passy.photoshare.ui.params.PhotoUploadParams
 import me.passy.photoshare.ui.presenters.PhotoUploadPresenter
 import me.passy.photoshare.ui.presenters.PresenterHolder
 import me.passy.photoshare.ui.views.PhotoUploadView
 import org.jetbrains.anko.AnkoLogger
-import org.jetbrains.anko.find
 import org.jetbrains.anko.imageURI
 import rx.Observable
 import rx.subjects.PublishSubject
@@ -33,10 +35,13 @@ class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
 
     private var params: PhotoUploadParams = PhotoUploadParams.EMPTY
 
-    private var sendActionClicks: PublishSubject<Unit> = PublishSubject.create()
+    private val sendActionClicks: PublishSubject<Unit> = PublishSubject.create()
 
     @Bind(R.id.thumbnail)
     lateinit var thumbnailView: ImageView
+
+    @Bind(R.id.photo_title)
+    lateinit var photoTitleView: EditText
 
     @field:[Inject Singleton]
     lateinit var presenterHolder: PresenterHolder
@@ -54,13 +59,15 @@ class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
              throw IllegalArgumentException("Failed to specify $EXTRA when starting $localClassName}.")
         }
 
-        val model = PhotoUploadModel(
-                photoPath = Observable.just(Uri.fromFile(params.photoPath)),
-                title = find<EditText>(R.id.photo_title).textChanges()
+        presenterHolder.obtain(
+                this,
+                presenterProvider,
+                this,
+                PhotoUploadModelStore(PhotoUploadModel(
+                        Uri.fromFile(params.photoPath), "",
+                        UploadStatus.Inactive)
+                )
         )
-
-        var presenter = presenterHolder.obtain(this, presenterProvider)
-        presenter.bind(this, this, model)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -74,6 +81,9 @@ class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
     override val saveBtnObservable: Observable<Unit>
         get() = sendActionClicks
 
+    override val photoTitleObservable: Observable<CharSequence>
+        get() = photoTitleView.textChanges()
+
     override val component: ActivityComponent
         get() = PhotoShareApplication.graph.plus(ActivityModule())
 
@@ -86,6 +96,10 @@ class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
 
     override fun setThumbnailSource(src: Uri) {
         thumbnailView.imageURI = src
+    }
+
+    override fun setFormEnabled(enabled: Boolean) {
+        photoTitleView.isEnabled = enabled
     }
 
 }
