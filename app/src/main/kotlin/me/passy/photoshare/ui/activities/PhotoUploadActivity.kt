@@ -12,10 +12,6 @@ import me.passy.photoshare.PhotoShareApplication
 import me.passy.photoshare.R
 import me.passy.photoshare.ui.MenuMode
 import me.passy.photoshare.ui.ScreenContainerModel
-import me.passy.photoshare.ui.models.PhotoUploadModel
-import me.passy.photoshare.ui.models.PhotoUploadModelStore
-import me.passy.photoshare.ui.models.Store
-import me.passy.photoshare.ui.models.UploadStatus
 import me.passy.photoshare.ui.params.PhotoUploadParams
 import me.passy.photoshare.ui.presenters.PhotoUploadPresenter
 import me.passy.photoshare.ui.presenters.PresenterHolder
@@ -62,11 +58,7 @@ class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
         presenterHolder.obtain(
                 this,
                 presenterProvider,
-                this,
-                PhotoUploadModelStore(PhotoUploadModel(
-                        Uri.fromFile(params.photoPath), "",
-                        UploadStatus.Inactive)
-                )
+                this
         )
     }
 

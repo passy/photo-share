@@ -6,58 +6,70 @@ import me.passy.photoshare.data.parse.Photo
 import me.passy.photoshare.data.repositories.PhotoRepository
 import me.passy.photoshare.data.repositories.PhotoUploadProgress
 import me.passy.photoshare.ui.models.PhotoUploadModel
+import me.passy.photoshare.ui.models.UploadStatus
 import me.passy.photoshare.ui.views.PhotoUploadView
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import rx.subscriptions.CompositeSubscription
 import java.io.File
+import javax.inject.Inject
 import javax.inject.Singleton
 
+class PhotoUploaderPresenterFactoryImpl @Inject constructor(val repo: PhotoRepository):
+        PhotoUploadPresenterFactory {
+    override fun create(model: PhotoUploadModel): PhotoUploadPresenter =
+        PhotoUploadPresenterImpl(repo, model)
+}
+
 @Singleton
-class PhotoUploadPresenterImpl constructor(val repo: PhotoRepository):
-        PhotoUploadPresenter, AnkoLogger {
+class PhotoUploadPresenterImpl(
+        val repo: PhotoRepository,
+        private var model: PhotoUploadModel
+): PhotoUploadPresenter, AnkoLogger {
 
-    val subscriptions: CompositeSubscription = CompositeSubscription()
+    override fun bind(view: PhotoUploadView) {
+        renderForm(view)
 
-    override fun bind(view: PhotoUploadView, model: Observable<PhotoUploadModel>) {
-        model.distinctUntilChanged().subscribe { m ->
-            subscriptions.clear()
-
-            subscriptions.add(
-                    view.saveBtnObservable
-                    .flatMap { Observable.just(m.photoPath) }
-                    .subscribeOn(Schedulers.io())
-                    .flatMap { uri: Uri ->
-                        repo.uploadPhoto(File(uri.path))
-                    }
-                    .flatMap {
-                        when (it) {
-                            is PhotoUploadProgress.Progress -> {
-                                Observable.never<ParseFile>()
-                            }
-                            is PhotoUploadProgress.Success ->
-                                Observable.just(it.file)
-                        }
-                    }
-                    .flatMap {
-                        val photo = Photo()
-                        photo.image = it
-                        repo.savePhoto(photo)
-                    }
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ file ->
-                        info("All cool. Saved and stuff.")
-                    }, {
-                        exc -> error("Exception! " + exc)
-                    })
-            )
+        // TOOD: Think about subscriptions. Do I need a lifecycle again here?
+        view.photoTitleObservable.subscribe {
+            model = model.copy(title = it)
         }
+
+        view.saveBtnObservable
+                .flatMap { Observable.just(model.photoPath) }
+                .subscribeOn(Schedulers.io())
+                .flatMap { uri: Uri ->
+                    repo.uploadPhoto(File(uri.path))
+                }
+                .doOnNext {
+                    model = model.copy(uploadStatus = UploadStatus.InProgress(it))
+                }
+                .flatMap {
+                    when (it) {
+                        is PhotoUploadProgress.Progress -> {
+                            Observable.never<ParseFile>()
+                        }
+                        is PhotoUploadProgress.Success ->
+                            Observable.just(it.file)
+                    }
+                }
+                .flatMap {
+                    val photo = Photo()
+                    photo.image = it
+                    photo.title = model.title.toString()
+                    repo.savePhoto(photo)
+                }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ file ->
+                    info("All cool. Saved and stuff.")
+                }, {
+                    exc -> error("Exception! " + exc)
+                })
     }
 
-    private fun render(view: PhotoUploadView, model: PhotoUploadModel) {
-        view.setThumbnailSource(model.photoPath)
+    fun renderForm(view: PhotoUploadView) {
+        view.setFormEnabled(model.uploadStatus is UploadStatus.Inactive)
     }
 }

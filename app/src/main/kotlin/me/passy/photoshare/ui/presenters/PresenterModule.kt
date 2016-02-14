@@ -8,10 +8,6 @@ import me.passy.photoshare.data.repositories.PhotoRepositoryImpl
 @Module
 class PresenterModule {
     @Provides
-    fun providePhotoUploadPresenter(repo: PhotoRepository): PhotoUploadPresenter
-            = PhotoUploadPresenterImpl(repo = repo)
-
-    @Provides
     fun providePhotoRepository(repo: PhotoRepositoryImpl): PhotoRepository
             = repo
 }
