@@ -5,7 +5,7 @@ import android.os.Parcelable
 
 import java.io.File
 
-public data class PhotoUploadParams(val photoPath: File) : Parcelable {
+data class PhotoUploadParams(val photoPath: File) : Parcelable, Params {
     constructor(source: Parcel): this(File(source.readString()))
 
     override fun describeContents(): Int {
@@ -17,7 +17,7 @@ public data class PhotoUploadParams(val photoPath: File) : Parcelable {
     }
 
     companion object {
-        public val EMPTY: PhotoUploadParams = PhotoUploadParams(File(""))
+        val EMPTY: PhotoUploadParams = PhotoUploadParams(File(""))
 
         @JvmField final val CREATOR: Parcelable.Creator<PhotoUploadParams> = object : Parcelable.Creator<PhotoUploadParams> {
             override fun createFromParcel(source: Parcel): PhotoUploadParams {

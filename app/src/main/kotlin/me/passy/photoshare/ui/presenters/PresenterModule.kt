@@ -10,4 +10,8 @@ class PresenterModule {
     @Provides
     fun providePhotoRepository(repo: PhotoRepositoryImpl): PhotoRepository
             = repo
+
+    @Provides
+    fun providePhotoPresenterFactory(factory: PhotoUploadPresenterFactoryImpl):
+            PhotoUploadPresenterFactory = factory
 }

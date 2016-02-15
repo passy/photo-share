@@ -13,7 +13,7 @@ import me.passy.photoshare.R
 import me.passy.photoshare.ui.MenuMode
 import me.passy.photoshare.ui.ScreenContainerModel
 import me.passy.photoshare.ui.params.PhotoUploadParams
-import me.passy.photoshare.ui.presenters.PhotoUploadPresenter
+import me.passy.photoshare.ui.presenters.PhotoUploadPresenterFactory
 import me.passy.photoshare.ui.presenters.PresenterHolder
 import me.passy.photoshare.ui.views.PhotoUploadView
 import org.jetbrains.anko.AnkoLogger
@@ -21,7 +21,6 @@ import org.jetbrains.anko.imageURI
 import rx.Observable
 import rx.subjects.PublishSubject
 import javax.inject.Inject
-import javax.inject.Provider
 import javax.inject.Singleton
 
 class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
@@ -43,7 +42,7 @@ class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
     lateinit var presenterHolder: PresenterHolder
 
     @Inject
-    lateinit var presenterProvider: Provider<PhotoUploadPresenter>
+    lateinit var presenterFactory: PhotoUploadPresenterFactory
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -57,7 +56,8 @@ class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
 
         presenterHolder.obtain(
                 this,
-                presenterProvider,
+                params,
+                presenterFactory,
                 this
         )
     }

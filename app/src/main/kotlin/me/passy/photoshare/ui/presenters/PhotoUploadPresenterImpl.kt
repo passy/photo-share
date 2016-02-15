@@ -7,6 +7,7 @@ import me.passy.photoshare.data.repositories.PhotoRepository
 import me.passy.photoshare.data.repositories.PhotoUploadProgress
 import me.passy.photoshare.ui.models.PhotoUploadModel
 import me.passy.photoshare.ui.models.UploadStatus
+import me.passy.photoshare.ui.params.PhotoUploadParams
 import me.passy.photoshare.ui.views.PhotoUploadView
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
@@ -17,17 +18,21 @@ import java.io.File
 import javax.inject.Inject
 import javax.inject.Singleton
 
-class PhotoUploaderPresenterFactoryImpl @Inject constructor(val repo: PhotoRepository):
+class PhotoUploadPresenterFactoryImpl @Inject @Singleton constructor(val repo: PhotoRepository):
         PhotoUploadPresenterFactory {
-    override fun create(model: PhotoUploadModel): PhotoUploadPresenter =
-        PhotoUploadPresenterImpl(repo, model)
+    override fun create(params: PhotoUploadParams): PhotoUploadPresenter =
+        PhotoUploadPresenterImpl(repo, params)
 }
 
-@Singleton
-class PhotoUploadPresenterImpl(
+class PhotoUploadPresenterImpl constructor(
         val repo: PhotoRepository,
-        private var model: PhotoUploadModel
+        private val params: PhotoUploadParams
 ): PhotoUploadPresenter, AnkoLogger {
+    private var model: PhotoUploadModel
+
+    init {
+        model = PhotoUploadModel(Uri.fromFile(params.photoPath), "", UploadStatus.Inactive)
+    }
 
     override fun bind(view: PhotoUploadView) {
         renderForm(view)
