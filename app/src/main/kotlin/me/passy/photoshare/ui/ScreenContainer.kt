@@ -12,7 +12,7 @@ import rx.Observable
 /**
  * An indirection which allows controlling the root container used for each activity.
  */
-public interface ScreenContainer {
+interface ScreenContainer {
     /**
      * The root [ViewGroup] into which the activity should place its contents.
      */

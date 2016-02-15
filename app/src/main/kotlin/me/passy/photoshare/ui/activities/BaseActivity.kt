@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.MenuItem
 import butterknife.ButterKnife
 import com.trello.rxlifecycle.components.RxActivity
+import me.passy.photoshare.PhotoShareApplication
 import me.passy.photoshare.ui.ForActivity
 import me.passy.photoshare.ui.ScreenContainer
 import me.passy.photoshare.ui.ScreenContainerModel
@@ -35,7 +36,7 @@ abstract class BaseActivity : RxActivity() {
         return super.onOptionsItemSelected(item)
     }
 
-    abstract val component: ActivityComponent
+    open val component: ActivityComponent = PhotoShareApplication.graph.plus(ActivityModule())
     abstract val layout: Int
     abstract val screenContainerModel: Observable<ScreenContainerModel>
 }

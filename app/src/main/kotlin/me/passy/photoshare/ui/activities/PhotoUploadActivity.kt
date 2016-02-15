@@ -8,7 +8,6 @@ import android.widget.ImageView
 import butterknife.Bind
 import com.jakewharton.rxbinding.view.clicks
 import com.jakewharton.rxbinding.widget.textChanges
-import me.passy.photoshare.PhotoShareApplication
 import me.passy.photoshare.R
 import me.passy.photoshare.ui.MenuMode
 import me.passy.photoshare.ui.ScreenContainerModel
@@ -75,9 +74,6 @@ class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
 
     override val photoTitleObservable: Observable<CharSequence>
         get() = photoTitleView.textChanges()
-
-    override val component: ActivityComponent
-        get() = PhotoShareApplication.graph.plus(ActivityModule())
 
     override val layout: Int = R.layout.content_photo_upload
 
