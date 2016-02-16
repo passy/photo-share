@@ -55,6 +55,7 @@ class PhotoUploadPresenterImpl constructor(
                 }
                 .doOnNext {
                     model = model.copy(uploadStatus = UploadStatus.InProgress(it))
+                    renderForm(view)
                     info("Upload status: " + it)
                 }
                 .flatMap {
