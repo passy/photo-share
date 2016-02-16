@@ -54,6 +54,7 @@ class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
         }
 
         presenterHolder.obtain(
+                savedInstanceState,
                 this,
                 params,
                 presenterFactory,

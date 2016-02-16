@@ -1,6 +1,7 @@
 package me.passy.photoshare.ui.presenters
 
 import android.net.Uri
+import android.os.Bundle
 import com.parse.ParseFile
 import com.trello.rxlifecycle.components.ActivityLifecycleProvider
 import me.passy.photoshare.data.parse.Photo
@@ -21,21 +22,40 @@ import javax.inject.Singleton
 
 class PhotoUploadPresenterFactoryImpl @Inject @Singleton constructor(val repo: PhotoRepository):
         PhotoUploadPresenterFactory {
-    override fun create(params: PhotoUploadParams): PhotoUploadPresenter =
-        PhotoUploadPresenterImpl(repo, params)
+    override fun create(params: PhotoUploadParams): PhotoUploadPresenter {
+        val model = PhotoUploadModel(Uri.fromFile(params.photoPath), "", UploadStatus.Inactive)
+        return PhotoUploadPresenterImpl(repo, model)
+    }
+
+    override fun fromState(bundle: Bundle): PhotoUploadPresenter? {
+        val model = bundle.getSerializable(PhotoUploadPresenterImpl.KEY_BUNDLE) as PhotoUploadModel?
+
+        return model?.let {
+            PhotoUploadPresenterImpl(repo, model)
+        }
+    }
 }
 
 class PhotoUploadPresenterImpl constructor(
         val repo: PhotoRepository,
-        private val params: PhotoUploadParams
+        private var model: PhotoUploadModel
 ): PhotoUploadPresenter, AnkoLogger {
-    private var model: PhotoUploadModel
 
     init {
-        model = PhotoUploadModel(Uri.fromFile(params.photoPath), "", UploadStatus.Inactive)
+        info { "Starting new PhotoUploadPresenter." }
+    }
+
+    companion object {
+        internal val KEY_BUNDLE = PhotoUploadPresenter::class.java.canonicalName + "_state"
+    }
+
+    override fun save(state: Bundle) {
+        state.putSerializable(KEY_BUNDLE, model)
     }
 
     override fun bind(view: PhotoUploadView, lifecycleProvider: ActivityLifecycleProvider) {
+        info { "Binding PhotoUploadPresenter." }
+
         renderForm(view)
         renderPhoto(view)
 
