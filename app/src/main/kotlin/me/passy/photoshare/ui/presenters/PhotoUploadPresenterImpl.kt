@@ -2,6 +2,7 @@ package me.passy.photoshare.ui.presenters
 
 import android.net.Uri
 import com.parse.ParseFile
+import com.trello.rxlifecycle.components.ActivityLifecycleProvider
 import me.passy.photoshare.data.parse.Photo
 import me.passy.photoshare.data.repositories.PhotoRepository
 import me.passy.photoshare.data.repositories.PhotoUploadProgress
@@ -34,14 +35,18 @@ class PhotoUploadPresenterImpl constructor(
         model = PhotoUploadModel(Uri.fromFile(params.photoPath), "", UploadStatus.Inactive)
     }
 
-    override fun bind(view: PhotoUploadView) {
+    override fun bind(view: PhotoUploadView, lifecycleProvider: ActivityLifecycleProvider) {
         renderForm(view)
+        renderPhoto(view)
 
-        // TOOD: Think about subscriptions. Do I need a lifecycle again here?
-        view.photoTitleObservable.subscribe {
-            model = model.copy(title = it)
-        }
+        view.photoTitleObservable
+                .compose(lifecycleProvider.bindToLifecycle<CharSequence>())
+                .subscribe {
+                    model = model.copy(title = it)
+                }
 
+        // TODO: This lifecycle is tricky. We need to unbind the view, but we may
+        // wanna keep the upload process.
         view.saveBtnObservable
                 .flatMap { Observable.just(model.photoPath) }
                 .subscribeOn(Schedulers.io())
@@ -50,6 +55,7 @@ class PhotoUploadPresenterImpl constructor(
                 }
                 .doOnNext {
                     model = model.copy(uploadStatus = UploadStatus.InProgress(it))
+                    info("Upload status: " + it)
                 }
                 .flatMap {
                     when (it) {
@@ -72,6 +78,10 @@ class PhotoUploadPresenterImpl constructor(
                 }, {
                     exc -> error("Exception! " + exc)
                 })
+    }
+
+    private fun renderPhoto(view: PhotoUploadView) {
+        view.setThumbnailSource(model.photoPath)
     }
 
     fun renderForm(view: PhotoUploadView) {

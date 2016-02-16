@@ -18,7 +18,7 @@ class PresenterHolder @Inject @Singleton constructor() {
         val slug = activity.javaClass.name
         val presenter = registry.getOrPut(slug, {
             factory.create(params).apply {
-                bind(view)
+                bind(view, activity)
             }
         }) as T
 
