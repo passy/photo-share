@@ -47,12 +47,14 @@ android {
 repositories {
     jcenter()
     maven { url 'https://github.com/8tory/parse-android-sdk.m2/raw/master/' }
+    maven { url = 'https://jitpack.io' }
     mavenCentral()
 
     // Currently only used for rxbindings-kotlin
     maven {
         url "https://oss.sonatype.org/content/repositories/snapshots"
     }
+
 }
 
 kapt {
@@ -73,6 +75,9 @@ dependencies {
     compile 'com.parse:parsetwitterutils-android:1.10.4'
     // Kotlin
     compile 'org.jetbrains.anko:anko-sdk23:0.8.2'
+    // Paper Parcel
+    compile 'com.github.grandstaish.paperparcel:paperparcel:1.0.0-beta1'
+    kapt 'com.github.grandstaish.paperparcel:compiler:1.0.0-beta1'
     // Rx
     compile 'io.reactivex:rxandroid:1.1.0'
     compile 'com.jakewharton.rxbinding:rxbinding-kotlin:0.3.1-SNAPSHOT'

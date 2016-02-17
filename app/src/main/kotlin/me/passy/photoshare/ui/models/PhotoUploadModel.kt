@@ -2,14 +2,14 @@ package me.passy.photoshare.ui.models
 
 import android.net.Uri
 import me.passy.photoshare.data.repositories.PhotoUploadProgress
-import java.io.Serializable
+import nz.bradcampbell.paperparcel.PaperParcel
 
-// TODO: Use https://github.com/grandstaish/paperparcel
+@PaperParcel
 data class PhotoUploadModel(
         val photoPath: Uri,
         val title: CharSequence,
         val uploadStatus: UploadStatus
-) : Serializable
+)
 
 sealed class UploadStatus {
     object Inactive : UploadStatus()

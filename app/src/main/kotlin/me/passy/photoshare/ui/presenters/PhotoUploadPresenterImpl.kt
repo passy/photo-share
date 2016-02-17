@@ -28,7 +28,7 @@ class PhotoUploadPresenterFactoryImpl @Inject @Singleton constructor(val repo: P
     }
 
     override fun fromState(bundle: Bundle): PhotoUploadPresenter? {
-        val model = bundle.getSerializable(PhotoUploadPresenterImpl.KEY_BUNDLE) as PhotoUploadModel?
+        val model = bundle.getParcelable<PhotoUploadModel>(PhotoUploadPresenterImpl.KEY_BUNDLE)
 
         return model?.let {
             PhotoUploadPresenterImpl(repo, model)
@@ -50,7 +50,7 @@ class PhotoUploadPresenterImpl constructor(
     }
 
     override fun save(state: Bundle) {
-        state.putSerializable(KEY_BUNDLE, model)
+        state.putParcelable(KEY_BUNDLE, model)
     }
 
     override fun bind(view: PhotoUploadView, lifecycleProvider: ActivityLifecycleProvider) {
