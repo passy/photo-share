@@ -35,9 +35,17 @@ class PresenterHolder @Inject @Singleton constructor() {
         activity
                 .lifecycle()
                 .filter { e -> e == ActivityEvent.DESTROY }
-                .compose(activity.bindToLifecycle<ActivityEvent>())
-                .subscribe { registry.remove(slug) }
+                .subscribe {
+                    registry.remove(slug)
+                }
 
         return presenter
+    }
+
+    @Suppress("UNCHECKED_CAST")
+    fun <V, T : Presenter<V>>save(state: Bundle,
+                                  activity: ActivityLifecycleProvider) {
+        val presenter = registry.get(activity.javaClass.name) as T?
+        presenter?.save(state)
     }
 }

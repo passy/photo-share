@@ -4,7 +4,9 @@ import android.net.Uri
 import me.passy.photoshare.data.repositories.PhotoUploadProgress
 import java.io.Serializable
 
-// TODO: Use https://github.com/grandstaish/paperparcel
+// TODO: Make this parcelable. I don't think we can do this
+// automatically due to the sealed class, so this will be
+// a little tedious.
 data class PhotoUploadModel(
         val photoPath: Uri,
         val title: CharSequence,
