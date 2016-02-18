@@ -2,6 +2,7 @@ package me.passy.photoshare.ui.activities
 
 import android.net.Uri
 import android.os.Bundle
+import android.os.PersistableBundle
 import android.view.Menu
 import android.widget.EditText
 import android.widget.ImageView
@@ -12,6 +13,7 @@ import me.passy.photoshare.R
 import me.passy.photoshare.ui.MenuMode
 import me.passy.photoshare.ui.ScreenContainerModel
 import me.passy.photoshare.ui.params.PhotoUploadParams
+import me.passy.photoshare.ui.presenters.PhotoUploadPresenter
 import me.passy.photoshare.ui.presenters.PhotoUploadPresenterFactory
 import me.passy.photoshare.ui.presenters.PresenterHolder
 import me.passy.photoshare.ui.views.PhotoUploadView
@@ -60,6 +62,12 @@ class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
                 presenterFactory,
                 this
         )
+    }
+
+    override fun onSaveInstanceState(outState: Bundle?, outPersistentState: PersistableBundle?) {
+        super.onSaveInstanceState(outState, outPersistentState)
+
+        presenterHolder.save<PhotoUploadPresenter>(outState, this)
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {

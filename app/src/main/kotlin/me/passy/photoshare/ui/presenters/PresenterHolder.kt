@@ -43,9 +43,11 @@ class PresenterHolder @Inject @Singleton constructor() {
     }
 
     @Suppress("UNCHECKED_CAST")
-    fun <V, T : Presenter<V>>save(state: Bundle,
-                                  activity: ActivityLifecycleProvider) {
-        val presenter = registry.get(activity.javaClass.name) as T?
-        presenter?.save(state)
+    fun <T : Presenter<*>>save(state: Bundle?,
+                               activity: ActivityLifecycleProvider) {
+        if (state != null) {
+            val presenter = registry[activity.javaClass.name] as T?
+            presenter?.save(state)
+        }
     }
 }
