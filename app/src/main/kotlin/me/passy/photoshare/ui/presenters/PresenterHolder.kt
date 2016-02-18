@@ -26,10 +26,10 @@ class PresenterHolder @Inject @Singleton constructor() {
             }
 
             if (presenter == null) {
-                factory.create(params)
+                presenter = factory.create(params)
             }
 
-            presenter!!.apply { bind(view, activity) }
+            presenter.apply { bind(view, activity) }
         }) as T
 
         activity

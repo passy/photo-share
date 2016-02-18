@@ -3,6 +3,7 @@ package me.passy.photoshare.ui.presenters
 import android.net.Uri
 import android.os.Bundle
 import com.parse.ParseFile
+import com.parse.ParseUser
 import com.trello.rxlifecycle.components.ActivityLifecycleProvider
 import me.passy.photoshare.data.parse.Photo
 import me.passy.photoshare.data.repositories.PhotoRepository
@@ -91,6 +92,7 @@ class PhotoUploadPresenterImpl constructor(
                     val photo = Photo()
                     photo.image = it
                     photo.title = model.title.toString()
+                    photo.user = ParseUser.getCurrentUser()
                     repo.savePhoto(photo)
                 }
                 .observeOn(AndroidSchedulers.mainThread())
