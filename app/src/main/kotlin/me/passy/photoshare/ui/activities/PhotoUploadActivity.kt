@@ -39,6 +39,7 @@ class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
     @Bind(R.id.photo_title)
     lateinit var photoTitleView: EditText
 
+    // FIXME: Right now this is only a singleton in the activity context which doesn't make any sense.
     @field:[Inject Singleton]
     lateinit var presenterHolder: PresenterHolder
 

@@ -3,6 +3,7 @@ package me.passy.photoshare.ui.presenters
 import android.os.Bundle
 import com.trello.rxlifecycle.ActivityEvent
 import com.trello.rxlifecycle.components.ActivityLifecycleProvider
+import com.trello.rxlifecycle.components.RxActivity
 import me.passy.photoshare.ui.params.Params
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
@@ -14,7 +15,7 @@ class PresenterHolder @Inject @Singleton constructor() {
     @Suppress("UNCHECKED_CAST")
     fun <V, P : Params, T : Presenter<V>> obtain(
             savedState: Bundle?,
-            activity: ActivityLifecycleProvider,
+            activity: RxActivity,
             params: P,
             factory: PresenterFactory<P, T>,
             view: V) : T {
@@ -35,6 +36,7 @@ class PresenterHolder @Inject @Singleton constructor() {
         activity
                 .lifecycle()
                 .filter { e -> e == ActivityEvent.DESTROY }
+                .filter { !activity.isChangingConfigurations }
                 .subscribe {
                     registry.remove(slug)
                 }
