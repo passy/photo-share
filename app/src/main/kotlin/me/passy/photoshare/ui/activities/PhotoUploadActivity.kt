@@ -9,6 +9,7 @@ import android.widget.ImageView
 import butterknife.Bind
 import com.jakewharton.rxbinding.view.clicks
 import com.jakewharton.rxbinding.widget.textChanges
+import me.passy.photoshare.ForApplication
 import me.passy.photoshare.R
 import me.passy.photoshare.ui.MenuMode
 import me.passy.photoshare.ui.ScreenContainerModel
@@ -40,7 +41,7 @@ class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
     lateinit var photoTitleView: EditText
 
     // FIXME: Right now this is only a singleton in the activity context which doesn't make any sense.
-    @field:[Inject Singleton]
+    @field:[Inject ForApplication Singleton]
     lateinit var presenterHolder: PresenterHolder
 
     @Inject
