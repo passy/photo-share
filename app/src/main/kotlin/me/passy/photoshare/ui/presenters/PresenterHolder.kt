@@ -5,12 +5,17 @@ import com.trello.rxlifecycle.ActivityEvent
 import com.trello.rxlifecycle.components.ActivityLifecycleProvider
 import com.trello.rxlifecycle.components.RxActivity
 import me.passy.photoshare.ui.params.Params
+import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 import java.util.concurrent.ConcurrentHashMap
 import javax.inject.Inject
-import javax.inject.Singleton
 
-class PresenterHolder @Inject @Singleton constructor() {
+class PresenterHolder @Inject constructor() : AnkoLogger {
     private val registry: ConcurrentHashMap<String, Presenter<*>> = ConcurrentHashMap()
+
+    init {
+        info("Init PresenterHolder")
+    }
 
     @Suppress("UNCHECKED_CAST")
     fun <V, P : Params, T : Presenter<V>> obtain(
@@ -26,11 +31,7 @@ class PresenterHolder @Inject @Singleton constructor() {
                 presenter = factory.fromState(savedState)
             }
 
-            if (presenter == null) {
-                presenter = factory.create(params)
-            }
-
-            presenter.apply { bind(view, activity) }
+            presenter ?: factory.create(params)
         }) as T
 
         activity
@@ -38,10 +39,13 @@ class PresenterHolder @Inject @Singleton constructor() {
                 .filter { e -> e == ActivityEvent.DESTROY }
                 .filter { !activity.isChangingConfigurations }
                 .subscribe {
+                    info { "Removing $slug from registry." }
                     registry.remove(slug)
                 }
 
-        return presenter
+        return presenter.apply {
+            bind(view, activity)
+        }
     }
 
     @Suppress("UNCHECKED_CAST")

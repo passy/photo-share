@@ -62,7 +62,11 @@ class PhotoUploadPresenterImpl constructor(
 
         view.photoTitleObservable
                 .compose(lifecycleProvider.bindToLifecycle<CharSequence>())
+                .doOnUnsubscribe {
+                    info { "title observable unsub" }
+                }
                 .subscribe {
+                    info { "model update: $it" }
                     model = model.copy(title = it)
                 }
 
@@ -96,6 +100,9 @@ class PhotoUploadPresenterImpl constructor(
                     repo.savePhoto(photo)
                 }
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnUnsubscribe {
+                    info("Unsubscribed.")
+                }
                 .subscribe({ file ->
                     info("All cool. Saved and stuff.")
                 }, {
