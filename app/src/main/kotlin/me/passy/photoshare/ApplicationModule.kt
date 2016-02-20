@@ -10,5 +10,6 @@ class ApplicationModule {
     @Provides
     @Singleton
     @ForApplication
-    fun providePresenterHolder(holder: PresenterHolder) = holder
+    fun providePresenterHolder(): PresenterHolder =
+            PresenterHolder()
 }
