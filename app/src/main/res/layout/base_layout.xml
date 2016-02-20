@@ -30,6 +30,7 @@
 
         </android.support.design.widget.AppBarLayout>
 
+        <!-- TODO: Figure out if this is a good idea and why it doesn't propagate the height. -->
         <android.support.v4.widget.NestedScrollView
             android:id="@+id/activity_content"
             android:layout_width="match_parent"

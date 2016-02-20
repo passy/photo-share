@@ -9,11 +9,12 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".ui.activities.StreamActivity">
 
+    <!-- TODO: Figure out why this has no height. -->
     <android.support.v7.widget.RecyclerView
         android:id="@+id/recycler"
         android:scrollbars="vertical"
         android:layout_width="match_parent"
-        android:layout_height="500dp"
+        android:layout_height="match_parent"
         android:background="@color/com_parse_ui_facebook_login_button"
         tools:listitem="@android:layout/simple_list_item_1" />
 </FrameLayout>
