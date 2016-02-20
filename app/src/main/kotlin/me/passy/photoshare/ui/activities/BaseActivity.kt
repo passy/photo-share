@@ -25,12 +25,6 @@ abstract class BaseActivity : RxActivity() {
         ButterKnife.bind(this)
     }
 
-    override fun onSaveInstanceState(outState: Bundle?) {
-        super.onSaveInstanceState(outState)
-
-        // Call presenter manager here
-    }
-
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when (item?.itemId) {
             android.R.id.home -> {

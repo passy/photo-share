@@ -103,10 +103,11 @@ class PhotoUploadPresenterImpl constructor(
                 .doOnUnsubscribe {
                     info("Unsubscribed.")
                 }
-                .subscribe({ file ->
+                .subscribe({
                     info("All cool. Saved and stuff.")
+                    view.onUploadFinished(it)
                 }, {
-                    exc -> error("Exception! " + exc)
+                    view.onUploadError(it)
                 })
     }
 
@@ -114,7 +115,7 @@ class PhotoUploadPresenterImpl constructor(
         view.setThumbnailSource(model.photoPath)
     }
 
-    fun renderForm(view: PhotoUploadView) {
+    private fun renderForm(view: PhotoUploadView) {
         view.setFormEnabled(model.uploadStatus is UploadStatus.Inactive)
     }
 }

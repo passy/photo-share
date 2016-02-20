@@ -1,5 +1,7 @@
 package me.passy.photoshare.ui.activities
 
+import android.app.Activity
+import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
 import android.os.PersistableBundle
@@ -11,6 +13,7 @@ import com.jakewharton.rxbinding.view.clicks
 import com.jakewharton.rxbinding.widget.textChanges
 import me.passy.photoshare.ForApplication
 import me.passy.photoshare.R
+import me.passy.photoshare.data.parse.Photo
 import me.passy.photoshare.ui.MenuMode
 import me.passy.photoshare.ui.ScreenContainerModel
 import me.passy.photoshare.ui.params.PhotoUploadParams
@@ -19,6 +22,7 @@ import me.passy.photoshare.ui.presenters.PhotoUploadPresenterFactory
 import me.passy.photoshare.ui.presenters.PresenterHolder
 import me.passy.photoshare.ui.views.PhotoUploadView
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.bundleOf
 import org.jetbrains.anko.imageURI
 import rx.Observable
 import rx.subjects.PublishSubject
@@ -28,6 +32,8 @@ import javax.inject.Singleton
 class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
     companion object {
         val EXTRA = "EXTRA"
+        val ARG_PHOTO = "PHOTO"
+        val ARG_ERROR = "ERROR"
     }
 
     private var params: PhotoUploadParams = PhotoUploadParams.EMPTY
@@ -40,7 +46,6 @@ class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
     @Bind(R.id.photo_title)
     lateinit var photoTitleView: EditText
 
-    // FIXME: Right now this is only a singleton in the activity context which doesn't make any sense.
     @field:[Inject ForApplication Singleton]
     lateinit var presenterHolder: PresenterHolder
 
@@ -101,4 +106,17 @@ class PhotoUploadActivity : BaseActivity(), PhotoUploadView, AnkoLogger {
         photoTitleView.isEnabled = enabled
     }
 
+    override fun onUploadFinished(photo: Photo) {
+        val intent = Intent()
+        intent.putExtras(bundleOf(ARG_PHOTO to photo))
+        setResult(Activity.RESULT_OK, intent)
+        finish()
+    }
+
+    override fun onUploadError(err: Throwable) {
+        val intent = Intent()
+        intent.putExtras(bundleOf(ARG_ERROR to err))
+        setResult(Activity.RESULT_CANCELED, intent)
+        finish()
+    }
 }
