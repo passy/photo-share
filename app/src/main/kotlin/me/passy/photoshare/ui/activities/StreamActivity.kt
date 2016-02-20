@@ -4,9 +4,17 @@ import android.content.Intent
 import android.os.Bundle
 import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.Snackbar
+import android.support.v7.widget.RecyclerView
+import android.view.View
+import android.widget.ImageView
+import android.widget.TextView
 import butterknife.Bind
+import butterknife.ButterKnife
+import com.javon.parserecyclerviewadapter.ParseRecyclerQueryAdapter
+import com.javon.parserecyclerviewadapter.annotations.Layout
 import me.passy.photoshare.PhotoShareApplication
 import me.passy.photoshare.R
+import me.passy.photoshare.data.parse.Photo
 import me.passy.photoshare.ui.ScreenContainerModel
 import me.passy.photoshare.ui.params.PhotoUploadParams
 import org.jetbrains.anko.AnkoLogger
@@ -25,12 +33,19 @@ class StreamActivity : BaseActivity(), AnkoLogger {
     @Bind(R.id.coordinator_layout)
     lateinit var coordinator: CoordinatorLayout
 
+    @Bind(R.id.recycler)
+    lateinit var recycler: RecyclerView
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         screenContainer.fab.onClick {
             startActivityForResult<CameraActivity>(REQUEST_PHOTO)
         }
+
+        val adapter = ParseRecyclerQueryAdapter<Photo, PhotoViewHolder>(
+                this, PhotoViewHolder::class.java, "Photo")
+        recycler.adapter = adapter
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -60,3 +75,15 @@ class StreamActivity : BaseActivity(), AnkoLogger {
     override val layout = R.layout.content_main
 }
 
+@Layout(R.layout.view_photo)
+class PhotoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    @Bind(R.id.photo_title)
+    lateinit var title: TextView
+
+    @Bind(R.id.photo_image)
+    lateinit var image: ImageView
+
+    init {
+        ButterKnife.bind(this, itemView)
+    }
+}

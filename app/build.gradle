@@ -71,6 +71,7 @@ dependencies {
     compile 'com.parse:parseui-login-android:0.0.1'
     compile 'com.parse:parseui-widget-android:0.0.1'
     compile 'com.parse:parsetwitterutils-android:1.10.4'
+    compile 'com.javon.parserecyclerviewadapter:parserecyclerviewadapter:1.0.4'
     // Kotlin
     compile 'org.jetbrains.anko:anko-sdk23:0.8.2'
     // Rx
