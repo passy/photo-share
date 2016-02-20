@@ -6,16 +6,16 @@ import android.support.design.widget.CoordinatorLayout
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.view.View
-import android.widget.ImageView
-import android.widget.TextView
 import butterknife.Bind
-import butterknife.ButterKnife
 import me.passy.photoshare.PhotoShareApplication
 import me.passy.photoshare.R
+import me.passy.photoshare.data.parse.Photo
 import me.passy.photoshare.ui.ScreenContainerModel
+import me.passy.photoshare.ui.adapters.ParseRecyclerQueryAdapter
+import me.passy.photoshare.ui.adapters.PhotoRecyclerAdapter
 import me.passy.photoshare.ui.params.PhotoUploadParams
 import org.jetbrains.anko.AnkoLogger
+import org.jetbrains.anko.info
 import org.jetbrains.anko.onClick
 import org.jetbrains.anko.startActivityForResult
 import rx.Observable
@@ -43,7 +43,26 @@ class StreamActivity : BaseActivity(), AnkoLogger {
             startActivityForResult<CameraActivity>(RequestCode.PHOTO.code)
         }
 
+        // Following @jessitron's advice on using silly names for stuff
+        // you really need to refactor.
+        refactorThisBecauseItDoesntBelongHere()
+    }
+
+    private fun refactorThisBecauseItDoesntBelongHere() {
+        val adapter = PhotoRecyclerAdapter(layoutInflater)
+        // TODO: Apply MVP
         recycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        recycler.adapter = adapter
+
+        adapter.addOnQueryLoadListener(object : ParseRecyclerQueryAdapter.OnQueryLoadListener<Photo> {
+            override fun onLoaded(objects: MutableList<Photo>?, e: Exception?) {
+                info { "on loaded" }
+            }
+
+            override fun onLoading() {
+                info { "on loading" }
+            }
+        })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -71,16 +90,4 @@ class StreamActivity : BaseActivity(), AnkoLogger {
         get() = PhotoShareApplication.graph.plus(ActivityModule())
 
     override val layout = R.layout.content_main
-}
-
-class PhotoViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-    @Bind(R.id.photo_title)
-    lateinit var title: TextView
-
-    @Bind(R.id.photo_image)
-    lateinit var image: ImageView
-
-    init {
-        ButterKnife.bind(this, itemView)
-    }
 }
