@@ -16,7 +16,7 @@ class Photo : ParseObject() {
         get() = getParseFile("image")
         set(file) = put("image", file)
 
-    var title: String
+    var title: String?
         get() = getString("title")
         set(str) = put("title", str)
 

@@ -17,9 +17,9 @@ import org.jetbrains.anko.imageURI
 import javax.inject.Inject
 
 class PhotoRecyclerAdapter @Inject constructor(val layoutInflater: LayoutInflater) :
-        ParseRecyclerQueryAdapter<Photo, PhotoViewHolder>(PhotoQueryAdapterFactory(), true) {
+        ParseRecyclerQueryAdapter<Photo, PhotoViewHolder>(PhotoQueryAdapterFactory()) {
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): PhotoViewHolder? {
-        val view = layoutInflater.inflate(R.layout.view_photo, parent)
+        val view = layoutInflater.inflate(R.layout.view_photo, parent, false)
         return PhotoViewHolder(itemView = view)
     }
 
@@ -28,11 +28,17 @@ class PhotoRecyclerAdapter @Inject constructor(val layoutInflater: LayoutInflate
         vh.image.imageURI = Uri.parse(photo.image.url)
         vh.title.text = photo.title
     }
+
+    override fun getItemId(position: Int): Long {
+        return getItem(position).objectId.hashCode().toLong()
+    }
 }
 
 internal class PhotoQueryAdapterFactory : ParseQueryAdapter.QueryFactory<Photo> {
     override fun create(): ParseQuery<Photo>? {
-        val query = ParseQuery(Photo::class.java)
+        val query = ParseQuery<Photo>("Photo")
+        query.include("user")
+        query.whereExists("image")
         return query
     }
 }

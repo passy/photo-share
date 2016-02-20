@@ -43,6 +43,8 @@ class StreamActivity : BaseActivity(), AnkoLogger {
             startActivityForResult<CameraActivity>(RequestCode.PHOTO.code)
         }
 
+        // This gets us some speed improvements.
+        recycler.setHasFixedSize(true)
         // Following @jessitron's advice on using silly names for stuff
         // you really need to refactor.
         refactorThisBecauseItDoesntBelongHere()
@@ -51,11 +53,11 @@ class StreamActivity : BaseActivity(), AnkoLogger {
     private fun refactorThisBecauseItDoesntBelongHere() {
         val adapter = PhotoRecyclerAdapter(layoutInflater)
         // TODO: Apply MVP
-        recycler.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
+        recycler.layoutManager = LinearLayoutManager(this)
         recycler.adapter = adapter
 
         adapter.addOnQueryLoadListener(object : ParseRecyclerQueryAdapter.OnQueryLoadListener<Photo> {
-            override fun onLoaded(objects: MutableList<Photo>?, e: Exception?) {
+            override fun onLoaded(objects: MutableList<Photo>?) {
                 info { "on loaded" }
             }
 
