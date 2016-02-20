@@ -9,5 +9,4 @@
     <string name="camera_error">This device doesn\'t support Camera2 API.</string>
     <string name="send">Send</string>
     <string name="photo_title_hint">Write a caption ...</string>
-    <string name="photo">Photo</string>
 </resources>
