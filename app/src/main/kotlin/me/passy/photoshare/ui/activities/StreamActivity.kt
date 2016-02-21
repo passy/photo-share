@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import butterknife.Bind
+import com.bumptech.glide.Glide
 import me.passy.photoshare.PhotoShareApplication
 import me.passy.photoshare.R
 import me.passy.photoshare.data.parse.Photo
@@ -51,7 +52,7 @@ class StreamActivity : BaseActivity(), AnkoLogger {
     }
 
     private fun refactorThisBecauseItDoesntBelongHere() {
-        val adapter = PhotoRecyclerAdapter(layoutInflater)
+        val adapter = PhotoRecyclerAdapter(layoutInflater, Glide.with(this))
         // TODO: Apply MVP
         recycler.layoutManager = LinearLayoutManager(this)
         recycler.adapter = adapter

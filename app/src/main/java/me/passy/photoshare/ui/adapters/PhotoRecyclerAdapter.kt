@@ -1,6 +1,5 @@
 package me.passy.photoshare.ui.adapters
 
-import android.net.Uri
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -9,14 +8,16 @@ import android.widget.ImageView
 import android.widget.TextView
 import butterknife.Bind
 import butterknife.ButterKnife
+import com.bumptech.glide.RequestManager
 import com.parse.ParseQuery
 import com.parse.ParseQueryAdapter
 import me.passy.photoshare.R
 import me.passy.photoshare.data.parse.Photo
-import org.jetbrains.anko.imageURI
 import javax.inject.Inject
 
-class PhotoRecyclerAdapter @Inject constructor(val layoutInflater: LayoutInflater) :
+class PhotoRecyclerAdapter @Inject constructor(
+        val layoutInflater: LayoutInflater,
+        val glideManager: RequestManager) :
         ParseRecyclerQueryAdapter<Photo, PhotoViewHolder>(PhotoQueryAdapterFactory()) {
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): PhotoViewHolder? {
         val view = layoutInflater.inflate(R.layout.view_photo, parent, false)
@@ -25,7 +26,8 @@ class PhotoRecyclerAdapter @Inject constructor(val layoutInflater: LayoutInflate
 
     override fun onBindViewHolder(vh: PhotoViewHolder, position: Int) {
         val photo: Photo = getItem(position)
-        vh.image.imageURI = Uri.parse(photo.image.url)
+        glideManager
+                .load(photo.image.url).into(vh.image)
         vh.title.text = photo.title
     }
 
