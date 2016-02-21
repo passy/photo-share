@@ -27,7 +27,9 @@ class PhotoRecyclerAdapter @Inject constructor(
     override fun onBindViewHolder(vh: PhotoViewHolder, position: Int) {
         val photo: Photo = getItem(position)
         glideManager
-                .load(photo.image.url).into(vh.image)
+                .load(photo.image.url)
+                .centerCrop()
+                .into(vh.image)
         vh.title.text = photo.title
     }
 
