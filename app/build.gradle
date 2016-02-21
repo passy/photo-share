@@ -84,13 +84,12 @@ dependencies {
     compile 'com.google.dagger:dagger:2.0.2'
     kapt 'com.google.dagger:dagger-compiler:2.0.2'
     provided 'org.glassfish:javax.annotation:10.0-b28'
-    // Tools
-    // TODO: Add Stetho
 
     compile('com.infstory:rxparse:1.0.3') {
         exclude module: 'parse'
         exclude module: 'bolts-android'
     }
+
     compile 'com.trello:rxlifecycle:0.3.0'
     compile 'com.trello:rxlifecycle-components:0.3.0'
     compile 'io.reactivex:rxjava-debug:1.0.2'
@@ -103,6 +102,10 @@ dependencies {
     compile 'com.squareup.retrofit:adapter-rxjava:2.0.0-beta2'
     compile 'com.jakewharton:butterknife:7.0.1'
     kapt 'com.jakewharton:butterknife:7.0.1'
+
+    // Debugging
+    compile 'com.facebook.stetho:stetho:1.3.0'
+    compile 'com.facebook.stetho:stetho-okhttp:1.3.0'
 
     // Testing
     testCompile 'junit:junit:4.12'
