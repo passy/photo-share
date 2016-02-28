@@ -20,7 +20,7 @@ class PhotoRecyclerAdapter @Inject constructor(
         val glideManager: RequestManager) :
         ParseRecyclerQueryAdapter<Photo, PhotoViewHolder>(PhotoQueryAdapterFactory()) {
     override fun onCreateViewHolder(parent: ViewGroup?, viewType: Int): PhotoViewHolder? {
-        val view = layoutInflater.inflate(R.layout.view_photo, parent, false)
+        val view = layoutInflater.inflate(R.layout.item_photo, parent, false)
         return PhotoViewHolder(itemView = view)
     }
 

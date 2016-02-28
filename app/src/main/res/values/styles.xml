@@ -24,4 +24,14 @@
         <item name="android:orientation">vertical</item>
     </style>
 
+    <style name="CollectionView">
+        <item name="android:clipToPadding">false</item>
+        <item name="android:scrollbars">none</item>
+    </style>
+
+    <style name="PhotoItem" parent="CardView.Light">
+        <item name="cardElevation">4dp</item>
+        <item name="cardUseCompatPadding">true</item>
+        <item name="cardCornerRadius">2dp</item>
+    </style>
 </resources>
