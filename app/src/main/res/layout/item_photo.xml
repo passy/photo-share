@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/PhotoItem"
     android:layout_gravity="center"
     android:layout_width="match_parent"
@@ -17,7 +18,10 @@
 
         <TextView
             android:id="@+id/photo_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            style="@style/PhotoItemText"
+            android:lines="1"
+            android:textAppearance="@android:style/TextAppearance.Material.Display4"
+            android:textSize="@dimen/text_size_large"
+            tools:text="West Side Niddlewog. Mucho fluffy." />
     </LinearLayout>
 </android.support.v7.widget.CardView>

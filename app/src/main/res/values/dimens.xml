@@ -16,4 +16,5 @@
     <dimen name="status_bar_height">25dp</dimen>
     <dimen name="fab_compat_margin">0dp</dimen>
     <dimen name="avatar_size">64dp</dimen>
+    <dimen name="text_size_large">18sp</dimen>
 </resources>

@@ -15,6 +15,8 @@ import me.passy.photoshare.R
 import me.passy.photoshare.data.parse.Photo
 import javax.inject.Inject
 
+// Investigate if we could use something like this for pagination:
+// https://github.com/ewintory/udacity-popular-movies/blob/52c95eaddd75632564012af459a9330ee84ddb4a/app/src/main/java/com/ewintory/udacity/popularmovies/ui/adapter/EndlessAdapter.java
 class PhotoRecyclerAdapter @Inject constructor(
         val layoutInflater: LayoutInflater,
         val glideManager: RequestManager) :
