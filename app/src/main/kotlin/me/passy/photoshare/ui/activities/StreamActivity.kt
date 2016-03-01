@@ -7,6 +7,7 @@ import android.support.design.widget.Snackbar
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import butterknife.Bind
+import butterknife.ButterKnife
 import com.bumptech.glide.Glide
 import me.passy.photoshare.ForApplication
 import me.passy.photoshare.PhotoShareApplication
@@ -54,6 +55,7 @@ class StreamActivity : BaseActivity(), StreamView, AnkoLogger {
         super.onCreate(savedInstanceState)
 
         component.inject(this)
+        ButterKnife.bind(this)
 
         screenContainer.fab.onClick {
             startActivityForResult<CameraActivity>(RequestCode.PHOTO.code)

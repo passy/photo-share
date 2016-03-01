@@ -2,7 +2,6 @@ package me.passy.photoshare.ui.activities
 
 import android.os.Bundle
 import android.view.MenuItem
-import butterknife.ButterKnife
 import com.trello.rxlifecycle.components.RxActivity
 import me.passy.photoshare.PhotoShareApplication
 import me.passy.photoshare.ui.ForActivity
@@ -21,8 +20,6 @@ abstract class BaseActivity : RxActivity() {
 
         val mainFrame = screenContainer.bind(this, screenContainerModel)
         layoutInflater.inflate(layout, mainFrame)
-
-        ButterKnife.bind(this)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {

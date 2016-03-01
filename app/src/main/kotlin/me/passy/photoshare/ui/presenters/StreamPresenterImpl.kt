@@ -9,11 +9,9 @@ import javax.inject.Singleton
 
 class StreamPresenterImpl : StreamPresenter {
     override fun bind(view: StreamView, lifecycleProvider: ActivityLifecycleProvider) {
-        throw UnsupportedOperationException()
     }
 
     override fun save(state: Bundle) {
-        throw UnsupportedOperationException()
     }
 }
 
