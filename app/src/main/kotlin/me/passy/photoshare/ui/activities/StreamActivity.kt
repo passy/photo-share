@@ -8,21 +8,28 @@ import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import butterknife.Bind
 import com.bumptech.glide.Glide
+import me.passy.photoshare.ForApplication
 import me.passy.photoshare.PhotoShareApplication
 import me.passy.photoshare.R
 import me.passy.photoshare.data.parse.Photo
 import me.passy.photoshare.ui.ScreenContainerModel
 import me.passy.photoshare.ui.adapters.ParseRecyclerQueryAdapter
 import me.passy.photoshare.ui.adapters.PhotoRecyclerAdapter
+import me.passy.photoshare.ui.params.NoParams
 import me.passy.photoshare.ui.params.PhotoUploadParams
+import me.passy.photoshare.ui.presenters.PresenterHolder
+import me.passy.photoshare.ui.presenters.StreamPresenterFactory
+import me.passy.photoshare.ui.views.StreamView
 import org.jetbrains.anko.AnkoLogger
 import org.jetbrains.anko.info
 import org.jetbrains.anko.onClick
 import org.jetbrains.anko.startActivityForResult
 import rx.Observable
 import java.io.File
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class StreamActivity : BaseActivity(), AnkoLogger {
+class StreamActivity : BaseActivity(), StreamView, AnkoLogger {
     override val screenContainerModel: Observable<ScreenContainerModel>
         get() = Observable.just(ScreenContainerModel.DEFAULT.copy(fabVisible = true))
 
@@ -37,8 +44,16 @@ class StreamActivity : BaseActivity(), AnkoLogger {
     @Bind(R.id.recycler)
     lateinit var recycler: RecyclerView
 
+    @field:[Inject ForApplication Singleton]
+    lateinit var presenterHolder: PresenterHolder
+
+    @Inject
+    lateinit var presenterFactory: StreamPresenterFactory
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        component.inject(this)
 
         screenContainer.fab.onClick {
             startActivityForResult<CameraActivity>(RequestCode.PHOTO.code)
@@ -49,6 +64,14 @@ class StreamActivity : BaseActivity(), AnkoLogger {
         // Following @jessitron's advice on using silly names for stuff
         // you really need to refactor.
         refactorThisBecauseItDoesntBelongHere()
+
+        presenterHolder.obtain(
+                savedInstanceState,
+                this,
+                NoParams(),
+                presenterFactory,
+                this
+        )
     }
 
     private fun refactorThisBecauseItDoesntBelongHere() {

@@ -1,6 +1,7 @@
 package me.passy.photoshare
 
 import android.support.multidex.MultiDexApplication
+import butterknife.ButterKnife
 import com.facebook.stetho.Stetho
 import com.parse.Parse
 import com.parse.ParseACL
@@ -20,6 +21,7 @@ class PhotoShareApplication : MultiDexApplication() {
         if (BuildConfig.DEBUG) {
             Stetho.initializeWithDefaults(this)
             Parse.setLogLevel(Parse.LOG_LEVEL_DEBUG)
+            ButterKnife.setDebug(true)
         }
 
         Parse.enableLocalDatastore(this)

@@ -15,7 +15,7 @@ import me.passy.photoshare.R
 import rx.Observable
 import javax.inject.Inject
 
-public class ScreenContainerImpl @Inject constructor() : ScreenContainer {
+class ScreenContainerImpl @Inject constructor() : ScreenContainer {
     @Bind(R.id.drawer_layout)
     lateinit override var drawerLayout: DrawerLayout
 
@@ -33,7 +33,6 @@ public class ScreenContainerImpl @Inject constructor() : ScreenContainer {
 
     override fun bind(activity: RxActivity, screenContainerModel: Observable<ScreenContainerModel>): ViewGroup {
         activity.setContentView(R.layout.base_layout)
-        ButterKnife.setDebug(true)
         ButterKnife.bind(this, activity)
 
         screenContainerModel

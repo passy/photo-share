@@ -14,4 +14,8 @@ class PresenterModule {
     @Provides
     fun providePhotoPresenterFactory(factory: PhotoUploadPresenterFactoryImpl):
             PhotoUploadPresenterFactory = factory
+
+    @Provides
+    fun provideStreamPresenterFactory(factory: StreamPresenterFactoryImpl):
+            StreamPresenterFactory = factory
 }
